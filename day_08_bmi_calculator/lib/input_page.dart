@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'reuseable_card.dart';
 import 'reuseable_icon.dart';
+import 'custom_icon_button.dart';
 
 // this how to create enums - to use -> Gender.male
 enum Gender { male, female }
@@ -16,7 +17,9 @@ class InputPage extends StatefulWidget {
 
 class _InputPageState extends State<InputPage> {
   Gender selectedGender = Gender.male;
-  int height = 180;
+  int height = 150;
+  int weight = 60;
+  int age = 30;
 
   // we can use a ternary operator inside widgets but if-else-statements has multiple lines of code, that's why we can not use them inside a widget
 
@@ -145,8 +148,74 @@ class _InputPageState extends State<InputPage> {
           Expanded(
             child: Row(
               children: [
-                Expanded(child: ReuseableCard(bgColor: activeCardColor)),
-                Expanded(child: ReuseableCard(bgColor: activeCardColor)),
+                Expanded(
+                  child: ReuseableCard(
+                    bgColor: activeCardColor,
+                    cardChild: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("WEIGHT", style: labelTextStyle),
+                        Text(weight.toString(), style: numeralTextStyle),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomIconButton(
+                              buttonIcon: Icons.remove,
+                              onTapped: () {
+                                setState(() {
+                                  weight--;
+                                });
+                              },
+                            ),
+                            SizedBox(width: 10),
+                            CustomIconButton(
+                              buttonIcon: Icons.add,
+                              onTapped: () {
+                                setState(() {
+                                  weight++;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ReuseableCard(
+                    bgColor: activeCardColor,
+                    cardChild: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("AGE", style: labelTextStyle),
+                        Text(age.toString(), style: numeralTextStyle),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomIconButton(
+                              buttonIcon: Icons.remove,
+                              onTapped: () {
+                                setState(() {
+                                  age--;
+                                });
+                              },
+                            ),
+                            SizedBox(width: 10),
+                            CustomIconButton(
+                              buttonIcon: Icons.add,
+                              onTapped: () {
+                                setState(() {
+                                  age++;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
