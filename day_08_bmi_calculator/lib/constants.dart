@@ -14,3 +14,21 @@ const TextStyle numeralTextStyle = TextStyle(
   fontSize: 40,
   fontWeight: FontWeight.w900,
 );
+
+const TextStyle titleTextStyle = TextStyle(
+  fontSize: 50,
+  fontWeight: FontWeight.bold,
+);
+
+const TextStyle resultTextStyle = TextStyle(
+  color: Color(0xff24d876),
+  fontSize: 22,
+  fontWeight: FontWeight.bold,
+);
+
+const TextStyle bmiTextStyle = TextStyle(
+  fontSize: 80,
+  fontWeight: FontWeight.bold,
+);
+
+const TextStyle bodyTextStyle = TextStyle(fontSize: 22);

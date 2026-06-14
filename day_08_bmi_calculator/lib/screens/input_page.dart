@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
-import 'reuseable_card.dart';
-import 'reuseable_icon.dart';
-import 'custom_icon_button.dart';
+import '/components/bottom_button.dart';
+import '/screens/results_page.dart';
+import '../constants.dart';
+import '../components/reuseable_card.dart';
+import '../components/reuseable_icon.dart';
+import '../components/custom_icon_button.dart';
 
 // this how to create enums - to use -> Gender.male
 enum Gender { male, female }
@@ -219,11 +221,14 @@ class _InputPageState extends State<InputPage> {
               ],
             ),
           ),
-          Container(
-            color: bottomContainerColor,
-            margin: EdgeInsetsDirectional.only(top: 10),
-            height: bottomContainerHeight,
-            width: double.infinity,
+          BottomButton(
+            buttonTitle: "CALCULATE",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ResultsPage()),
+              );
+            },
           ),
         ],
       ),
