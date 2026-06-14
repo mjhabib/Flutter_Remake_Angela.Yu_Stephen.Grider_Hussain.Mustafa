@@ -117,17 +117,26 @@ class _InputPageState extends State<InputPage> {
                       Text("cm", style: labelTextStyle),
                     ],
                   ),
-                  Slider(
-                    value: height.toDouble(),
-                    min: 80,
-                    max: 280,
-                    activeColor: Color(0xffeb1555),
-                    inactiveColor: Color(0xff8d8e98),
-                    onChanged: (double newValue) {
-                      setState(() {
-                        height = newValue.round();
-                      });
-                    },
+                  SliderTheme(
+                    // if we're not happy with some of the default values for this widget, we can customize it with this SliderTheme
+                    // if I had more than one slider, I could move this custom theme in my main.dart theme for project-wide effect
+                    data: SliderTheme.of(context).copyWith(
+                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12),
+                      activeTrackColor: Colors.white,
+                      overlayColor: Color(0x29eb1555),
+                    ),
+                    child: Slider(
+                      value: height.toDouble(),
+                      min: 80,
+                      max: 280,
+                      inactiveColor: Color(0xff8d8e98),
+                      thumbColor: Color(0xffeb1555),
+                      onChanged: (double newValue) {
+                        setState(() {
+                          height = newValue.round();
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
