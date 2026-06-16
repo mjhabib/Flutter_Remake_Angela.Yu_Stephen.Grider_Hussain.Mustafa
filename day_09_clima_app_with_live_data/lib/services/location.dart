@@ -1,5 +1,8 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:geolocator/geolocator.dart';
+
+import '/services/networking.dart';
 
 // Important NOTE
 // Geolocator Web is only available in secure_contexts (HTTPS), so it MIGHT not gonna work when I'm testing it on my localhost browser!
@@ -74,4 +77,15 @@ class LiveLocation {
 class FixedLocation {
   double latitude = 32.6329872;
   double longitude = 51.3655016;
+
+  // access .env variable using dotenv package
+  final owmAPIKey = dotenv.get('OPENWEATHERMAP_API_KEY');
+  late String owmEndpoint =
+      "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$owmAPIKey&units=metric";
+
+  // pass on the API endpoint to get a respond
+  Future<Map<String, dynamic>> getDecodedData() {
+    late NetworkHelper networkHelper = NetworkHelper(url: owmEndpoint);
+    return networkHelper.getJsonData();
+  }
 }
