@@ -89,3 +89,20 @@ class FixedLocation {
     return networkHelper.getJsonData();
   }
 }
+
+// get WeatherData based on a city name not lat & lon
+class CityLocation {
+  late String cityName;
+  CityLocation({required this.cityName});
+
+  // access .env variable using dotenv package
+  final owmAPIKey = dotenv.get('OPENWEATHERMAP_API_KEY');
+  late String owmEndpoint =
+      "https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$owmAPIKey&units=metric";
+
+  // pass on the API endpoint to get a respond
+  Future<Map<String, dynamic>> getDecodedData() {
+    late NetworkHelper networkHelper = NetworkHelper(url: owmEndpoint);
+    return networkHelper.getJsonData();
+  }
+}

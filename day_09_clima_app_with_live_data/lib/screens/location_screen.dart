@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '/screens/city_screen.dart';
+import '/services/location.dart';
 import '/services/weather.dart';
 import '/utilities/constants.dart';
 
@@ -29,6 +31,14 @@ class _LocationScreenState extends State<LocationScreen> {
 
   void updateUI(dynamic data) {
     setState(() {
+      if (data == null) {
+        temp = 0;
+        condition = 0;
+        city = 'Nowhere!';
+        weatherIcon = 'Error';
+        weatherMessage = 'Unable to get weather data';
+        return;
+      }
       temp = data["temp"];
       condition = data["id"];
       city = data["city"];
@@ -61,11 +71,30 @@ class _LocationScreenState extends State<LocationScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      FixedLocation location = FixedLocation();
+                      Map<String, dynamic> weatherData = await location
+                          .getDecodedData();
+                      updateUI(weatherData);
+                    },
                     child: Icon(Icons.near_me, size: 50.0),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      // since we used our Navigator.pop method in city_screen to pass some data back, we can now save that data in a variable by our Navigator.push.
+                      var typedName = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CityScreen()),
+                      );
+                      if (typedName != null) {
+                        CityLocation location = CityLocation(
+                          cityName: typedName,
+                        );
+                        Map<String, dynamic> weatherData = await location
+                            .getDecodedData();
+                        updateUI(weatherData);
+                      }
+                    },
                     child: Icon(Icons.location_city, size: 50.0),
                   ),
                 ],
