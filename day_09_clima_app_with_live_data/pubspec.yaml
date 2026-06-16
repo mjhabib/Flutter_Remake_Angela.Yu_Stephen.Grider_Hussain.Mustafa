@@ -12,7 +12,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
+  flutter_dotenv: ^6.0.1
   geolocator: ^14.0.3
+  http: ^1.6.0
 
 
 dev_dependencies:
@@ -25,6 +27,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - .env
 
   fonts:
   - family: Spartan

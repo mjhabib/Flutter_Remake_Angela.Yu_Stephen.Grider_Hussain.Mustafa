@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 // Important NOTE
 // Geolocator Web is only available in secure_contexts (HTTPS), so it MIGHT not gonna work when I'm testing it on my localhost browser!
 
-class Location {
+class LiveLocation {
   /// Determines the current position of the device.
   /// Handles both mobile (Android/iOS) and web platforms.
   static Future<Position?> getCurrentLocation() async {
@@ -57,4 +57,21 @@ class Location {
       return null;
     }
   }
+
+  // for test and debug
+  Future<void> getLiveLocation() async {
+    Position? position = await LiveLocation.getCurrentLocation();
+    if (position != null) {
+      print(position.latitude);
+      print(position.longitude);
+    } else {
+      print("Something went wrong!");
+    }
+  }
+}
+
+// since the helper above might fail during test on a web-browser, this class was designed to always return a fixed location (Najafabad)
+class FixedLocation {
+  double latitude = 32.6329872;
+  double longitude = 51.3655016;
 }
