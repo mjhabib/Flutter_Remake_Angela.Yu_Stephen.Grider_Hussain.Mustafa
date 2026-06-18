@@ -53,6 +53,73 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
+  // get Fixed prices
+  Map<String, int> coinPrices = CoinData().getData();
+
+  // Some popular ways to loop through a Map in Dart (for reference)
+
+  // 01.
+  // for (var entry in cryptoList.entries) {
+  //   print('Key: ${entry.key}, Value: ${entry.value}');
+  // }
+
+  // 02.
+  // for (var key in cryptoList.keys) {
+  //   var value = cryptoList[key];
+  //   print('Key: $key, Value: $value');
+  // }
+  // for (var value in cryptoList.values) {
+  //   print('Value: $value');
+  // }
+
+  // 03.
+  // var keys = cryptoList.keys.toList();
+  // for (int i = 0; i < keys.length; i++) {
+  //   var key = keys[i];
+  //   var value = cryptoList[key];
+  //   print('Key: $key, Value: $value');
+  // }
+
+  // 04.
+  // var formatted = cryptoList.entries.map((entry) {
+  //   return '${entry.key} = ${entry.value}';
+  // }).toList();
+
+  // print(formatted);
+
+  // Show all three cryptos with their prices
+  List<Widget> cryptoText = [];
+  void getCryptoPrices() {
+    // 05.
+    cryptoList.forEach((key, value) {
+      setState(() {
+        cryptoText.add(
+          Card(
+            color: Colors.lightBlueAccent,
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+              child: Text(
+                '1 $key = $value $selectedCurrency',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20.0, color: Colors.white),
+              ),
+            ),
+          ),
+        );
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCryptoPrices();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,20 +130,9 @@ class _PriceScreenState extends State<PriceScreen> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = ? USD',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20.0, color: Colors.white),
-                ),
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: cryptoText,
             ),
           ),
           Container(
