@@ -2,6 +2,7 @@ import '/coin_data.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+// import 'dart:io' show Platform;
 
 class PriceScreen extends StatefulWidget {
   const PriceScreen({super.key});
@@ -14,33 +15,42 @@ class _PriceScreenState extends State<PriceScreen> {
   // our default currency
   String? selectedCurrency = 'USD';
 
-  // for each currency in our list, create a new 'DropDownMenuItem'
-  List<DropdownMenuItem<String>> dropDownItems = [];
-  List<DropdownMenuItem<String>> getCurrencies() {
+  // Android: for each currency in our list, create a new 'DropDownMenuItem'
+  DropdownButton<String> androidDropdown() {
+    List<DropdownMenuItem<String>> dropdownItems = [];
+
     for (String currency in currenciesList) {
       DropdownMenuItem<String> newItem = DropdownMenuItem(
         value: currency,
         child: Text(currency),
       );
-      dropDownItems.add(newItem);
+      dropdownItems.add(newItem);
     }
-    return dropDownItems;
+
+    return DropdownButton<String>(
+      value: selectedCurrency,
+      items: dropdownItems,
+      onChanged: (value) {
+        setState(() {
+          selectedCurrency = value;
+        });
+      },
+    );
   }
 
-  // for IOS
-  List<Text> pickerItems = [];
-  List<Text> iOSPicker() {
+  // same for IOS
+  CupertinoPicker iosPicker() {
+    List<Text> pickerItems = [];
+
     for (String currency in currenciesList) {
       pickerItems.add(Text(currency));
     }
-    return pickerItems;
-  }
 
-  @override
-  void initState() {
-    super.initState();
-    getCurrencies();
-    iOSPicker();
+    return CupertinoPicker(
+      itemExtent: 32,
+      onSelectedItemChanged: (selectedIndex) {},
+      children: pickerItems,
+    );
   }
 
   @override
@@ -74,26 +84,11 @@ class _PriceScreenState extends State<PriceScreen> {
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
-            child: CupertinoPicker(
-              itemExtent: 32,
-              onSelectedItemChanged: (selectedIndex) {},
-              children: pickerItems,
-            ),
+            child: androidDropdown(),
+            // child: Platform.isIOS ? iosPicker() : androidDropdown(),
           ),
         ],
       ),
     );
   }
 }
-
-
-// DropdownButton<String>(
-//               value: selectedCurrency, // default
-//               items: dropDownItems,
-//               // [DropdownMenuItem(value: 'USD', child: Text('USD'))],
-//               onChanged: (value) {
-//                 setState(() {
-//                   selectedCurrency = value;
-//                 });
-//               },
-//             ),
