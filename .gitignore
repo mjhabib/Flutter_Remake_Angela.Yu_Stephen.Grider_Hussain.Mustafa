@@ -43,6 +43,7 @@ build/
 /android/app/release
 *.gradle
 local.properties
+google-services.json
 
 # --- iOS ---
 /ios/Pods/
