@@ -44,6 +44,7 @@ build/
 *.gradle
 local.properties
 google-services.json
+firebase-config.js
 
 # --- iOS ---
 /ios/Pods/
