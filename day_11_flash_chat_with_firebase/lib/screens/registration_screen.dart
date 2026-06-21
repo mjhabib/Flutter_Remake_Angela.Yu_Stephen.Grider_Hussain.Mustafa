@@ -16,9 +16,15 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   late String email;
   late String password;
+  late bool _isLoading = false;
   final _auth = FirebaseAuth.instance;
 
   Future<void> _registerUser() async {
+    // 1. Turn on the spinner
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
       await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -37,6 +43,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
       print(e);
+    } finally {
+      // 2. Turn off the spinner whether it succeeds or fails
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -83,6 +96,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             RoundedButton(
               label: 'Register',
               color: Colors.blueAccent,
+              isLoading: _isLoading,
               onPressed: _registerUser,
             ),
           ],

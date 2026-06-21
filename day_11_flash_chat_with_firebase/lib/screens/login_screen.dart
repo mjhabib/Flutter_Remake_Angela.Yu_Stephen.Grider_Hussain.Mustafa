@@ -16,9 +16,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late String email;
   late String password;
+  late bool _isLoading = false;
   final _auth = FirebaseAuth.instance;
 
   Future<void> _logInUser() async {
+    // 1. Turn on the spinner
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       // Check if the widget is still mounted before using context
@@ -33,6 +39,13 @@ class _LoginScreenState extends State<LoginScreen> {
         ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
       print(e);
+    } finally {
+      // 2. Turn off the spinner whether it succeeds or fails
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -79,6 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
             RoundedButton(
               label: 'Log In',
               color: Colors.lightBlueAccent,
+              isLoading: _isLoading,
               onPressed: _logInUser,
             ),
           ],

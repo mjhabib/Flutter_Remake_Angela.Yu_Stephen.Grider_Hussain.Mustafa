@@ -4,11 +4,14 @@ class RoundedButton extends StatelessWidget {
   final String label;
   final Color color;
   final VoidCallback onPressed;
+  final bool isLoading;
+
   const RoundedButton({
     super.key,
     required this.label,
     required this.color,
     required this.onPressed,
+    this.isLoading = false,
   });
 
   @override
@@ -23,7 +26,13 @@ class RoundedButton extends StatelessWidget {
           onPressed: onPressed,
           minWidth: 200.0,
           height: 42.0,
-          child: Text(label, style: TextStyle(color: Colors.white)),
+          child: isLoading
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(color: Colors.white),
+                )
+              : Text(label, style: TextStyle(color: Colors.white)),
         ),
       ),
     );
