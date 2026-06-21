@@ -1,6 +1,9 @@
-import 'package:flash_chat/components/rounded_button.dart';
-import 'package:flash_chat/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:flash_chat/components/rounded_button.dart';
+import 'package:flash_chat/screens/chat_screen.dart';
+import 'package:flash_chat/constants.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,6 +16,25 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late String email;
   late String password;
+  final _auth = FirebaseAuth.instance;
+
+  Future<void> _logInUser() async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      // Check if the widget is still mounted before using context
+      if (mounted) {
+        Navigator.pushNamed(context, ChatScreen.id);
+      }
+    } catch (e) {
+      // Check mounted before showing error messages
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
             RoundedButton(
               label: 'Log In',
               color: Colors.lightBlueAccent,
-              onPressed: () {},
+              onPressed: _logInUser,
             ),
           ],
         ),
