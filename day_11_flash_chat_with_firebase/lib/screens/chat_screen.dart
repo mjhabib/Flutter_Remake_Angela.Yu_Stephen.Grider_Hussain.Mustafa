@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flash_chat/constants.dart';
@@ -12,21 +13,58 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    getCurrentUser();
-  }
-
+  final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   User? loggedInUser;
+  String? messageText;
+  late bool _isLoading = false;
 
   void getCurrentUser() {
     final user = _auth.currentUser;
     if (user != null) {
       loggedInUser = user;
     }
+  }
+
+  Future<void> getMessages() async {
+    // 1. Turn on the spinner
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      if (messageText != null) {
+        await _firestore.collection('messages').add({
+          'text': messageText,
+          'sender': loggedInUser?.email,
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: Message can not be empty!')),
+        );
+      }
+    } catch (e) {
+      {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
+      print(e);
+    } finally {
+      // 2. Turn off the spinner whether it succeeds or fails
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getCurrentUser();
   }
 
   @override
@@ -59,16 +97,22 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                     child: TextField(
                       onChanged: (value) {
-                        //Do something with the user input.
+                        messageText = value;
                       },
                       decoration: messageTextFieldDecoration,
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      //Implement send functionality.
-                    },
-                    child: Text('Send', style: sendButtonTextStyle),
+                    onPressed: getMessages,
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text('Send', style: sendButtonTextStyle),
                   ),
                 ],
               ),
