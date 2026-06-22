@@ -59,15 +59,18 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Hero(
-              tag: 'logo',
-              child: SizedBox(
-                height: 200.0,
-                child: Image.asset('assets/logo.png'),
+            Flexible(
+              child: Hero(
+                tag: 'logo',
+                child: SizedBox(
+                  height: 200.0,
+                  child: Image.asset('assets/logo.png'),
+                ),
               ),
             ),
             SizedBox(height: 48.0),
             TextField(
+              autofocus: true,
               textAlign: TextAlign.center,
               keyboardType: TextInputType.emailAddress,
               onChanged: (value) {
@@ -83,6 +86,9 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: true,
               onChanged: (value) {
                 password = value;
+              },
+              onSubmitted: (_) {
+                _logInUser();
               },
               decoration: textFieldDecoration.copyWith(
                 hintText: 'Enter your password',

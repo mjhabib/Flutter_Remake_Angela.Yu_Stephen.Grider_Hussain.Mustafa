@@ -63,15 +63,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Hero(
-              tag: 'logo',
-              child: SizedBox(
-                height: 200.0,
-                child: Image.asset('assets/logo.png'),
+            Flexible(
+              child: Hero(
+                tag: 'logo',
+                child: SizedBox(
+                  height: 200.0,
+                  child: Image.asset('assets/logo.png'),
+                ),
               ),
             ),
             SizedBox(height: 48.0),
             TextField(
+              autofocus: true,
               textAlign: TextAlign.center,
               keyboardType: TextInputType.emailAddress,
               onChanged: (value) {
@@ -88,6 +91,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               onChanged: (value) {
                 password = value;
               },
+              onSubmitted: (_) => _registerUser(),
               decoration: textFieldDecoration.copyWith(
                 hintText: 'Enter your password',
               ),
