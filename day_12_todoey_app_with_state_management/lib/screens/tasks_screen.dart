@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+
+import 'package:todoey_app/models/task.dart';
+import 'package:todoey_app/widgets/tasks_list.dart';
 import 'package:todoey_app/screens/add_task_screen.dart';
 
-import 'package:todoey_app/widgets/tasks_list.dart';
-
-class TasksScreen extends StatelessWidget {
+class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
+
+  @override
+  State<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+  // what we did here is called "lifting state up" by passing tasks from a child widget (TasksList) to it's parent widget (here)
+  List<Task> tasks = [];
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +23,14 @@ class TasksScreen extends StatelessWidget {
         onPressed: () {
           showModalBottomSheet(
             context: context,
-            builder: (context) => AddTaskScreen(),
+            builder: (context) => AddTaskScreen(
+              addTaskCallback: (newTaskTitle) {
+                setState(() {
+                  tasks.add(Task(name: newTaskTitle));
+                  Navigator.pop(context);
+                });
+              },
+            ),
           );
         },
         backgroundColor: Colors.lightBlueAccent,
@@ -48,7 +64,7 @@ class TasksScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '12 tasks',
+                  '${tasks.length} tasks',
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
@@ -65,7 +81,7 @@ class TasksScreen extends StatelessWidget {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: TasksList(),
+              child: TasksList(tasks: tasks),
             ),
           ),
         ],
