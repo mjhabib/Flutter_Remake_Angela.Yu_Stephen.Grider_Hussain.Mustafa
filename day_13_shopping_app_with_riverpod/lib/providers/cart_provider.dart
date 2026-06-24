@@ -1,10 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// 01. import
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:shopping_app/models/product.dart';
 
+// 02. part
+part 'cart_provider.g.dart';
+// 03. Run in Terminal: dart run build_runner watch
+
 // Our previous Provider (ProductsProvider) was static and designed to pass values around different widgets
 // This Provider (NotifierProvider) is dynamic and its job is to update states and notify consumer about those changes
-class CartNotifier extends Notifier<Set<Product>> {
+
+// 01. Using Provider generator
+@riverpod
+class CartNotifier extends _$CartNotifier {
   // Initial value
   @override
   Set<Product> build() {
@@ -25,6 +34,6 @@ class CartNotifier extends Notifier<Set<Product>> {
   }
 }
 
-final cartNotifierProvider = NotifierProvider<CartNotifier, Set<Product>>(() {
-  return CartNotifier();
-});
+// final cartNotifierProvider = NotifierProvider<CartNotifier, Set<Product>>(() {
+//   return CartNotifier();
+// });
