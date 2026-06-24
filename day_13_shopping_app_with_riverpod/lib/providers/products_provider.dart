@@ -1,6 +1,12 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// 01.
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:shopping_app/models/product.dart';
+
+// 02.
+part 'products_provider.g.dart';
+// 03. Run in Terminal: dart run build_runner watch
 
 const List<Product> allProducts = [
   Product(
@@ -54,11 +60,22 @@ const List<Product> allProducts = [
 ];
 
 // the most general and simple type of Riverpod Provider
-final productsProvider = Provider((ref) {
-  return allProducts;
-});
+// final productsProvider = Provider((ref) {
+//   return allProducts;
+// });
 
 // return products with the price of less than 50
-final reducedProductsProvider = Provider((ref) {
+// final reducedProductsProvider = Provider((ref) {
+//   return allProducts.where((p) => p.price < 50).toList();
+// });
+
+// 1. Generated providers
+@riverpod
+List<Product> products(Ref ref) {
+  return allProducts;
+}
+
+@riverpod
+List<Product> reducedProducts(Ref ref) {
   return allProducts.where((p) => p.price < 50).toList();
-});
+}
