@@ -37,3 +37,16 @@ class CartNotifier extends _$CartNotifier {
 // final cartNotifierProvider = NotifierProvider<CartNotifier, Set<Product>>(() {
 //   return CartNotifier();
 // });
+
+// A read only provider to show the total price of items in the cart
+@riverpod
+int cartTotal(Ref ref) {
+  final cartProducts = ref.watch(cartProvider);
+
+  int total = 0;
+  for (Product product in cartProducts) {
+    total += product.price;
+  }
+
+  return total;
+}
