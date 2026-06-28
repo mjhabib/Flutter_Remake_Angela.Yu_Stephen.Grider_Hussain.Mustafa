@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:riverpod_practice/providers/app_provider.dart';
+import 'package:riverpod_practice/widgets/counter_button.dart';
 
 void main() {
   // 1. ProviderScope (the manager) keeps track of all the providers.
@@ -28,7 +29,7 @@ class MainApp extends ConsumerWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: Text(myAppName)),
-        body: Center(child: Text(myAppName)),
+        body: Center(child: CounterButton()),
       ),
     );
   }
