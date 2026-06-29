@@ -26,3 +26,16 @@ class CounterButton extends ConsumerWidget {
     );
   }
 }
+
+// C: We can use 'listen()' when we don't want to rebuild the entire screen (UI/Widgets) just because we wanna show something like a 'SnackBar' in this example.
+// We use 'listen' to react to the change because it does not return anything:
+
+// ref.listen(counterProvider, (previous, next) {
+//   if (next == 10) {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       const SnackBar(
+//         content: Text('Congratulation, you reached 10!'),
+//       ),
+//     );
+//   }
+// });
