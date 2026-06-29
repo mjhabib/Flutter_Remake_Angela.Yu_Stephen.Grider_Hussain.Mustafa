@@ -34,3 +34,26 @@ class MainApp extends ConsumerWidget {
     );
   }
 }
+
+// ======================= Riverpod Cheat Sheet =======================
+//
+// ref.watch(provider)
+// - Read the provider's state.
+// - Rebuilds when the state changes.
+// - Used for displaying data in the UI.
+//
+// ref.read(provider)
+// - Reads the current value once.
+// - Does NOT rebuild.
+// - Used for one-time actions.
+//
+// ref.read(provider.notifier)
+// - Gets the notifier object.
+// - Used to call methods that change the state.
+//
+// ref.listen(provider)
+// - Reacts to state changes.
+// - Does NOT rebuild the UI.
+// - Used for side effects (SnackBars, dialogs, navigation, etc.).
+//
+// ====================================================================
