@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddTaskScreen extends StatelessWidget {
-  const AddTaskScreen({super.key, required this.addTaskCallback});
+import 'package:todoey_app/providers/task_data_provider.dart';
 
-  final Function addTaskCallback;
+class AddTaskScreen extends ConsumerWidget {
+  const AddTaskScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    String? newTaskTitle;
+  Widget build(BuildContext context, WidgetRef ref) {
+    String newTaskTitle = '';
+    // for the TextButton
+    void onPressed() {
+      ref.read(taskDataProvider.notifier).addTask(newTaskTitle);
+      Navigator.pop(context);
+    }
+
+    // for the TextField
+    void onSubmitted(String value) {
+      // Use the value from the TextField
+      if (value.isNotEmpty) {
+        ref.read(taskDataProvider.notifier).addTask(value);
+        Navigator.pop(context);
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -34,9 +50,7 @@ class AddTaskScreen extends StatelessWidget {
             onChanged: (newText) {
               newTaskTitle = newText;
             },
-            onSubmitted: (_) {
-              addTaskCallback(newTaskTitle);
-            },
+            onSubmitted: onSubmitted,
           ),
           SizedBox(height: 20),
           TextButton(
@@ -46,9 +60,7 @@ class AddTaskScreen extends StatelessWidget {
                 Colors.lightBlueAccent,
               ),
             ),
-            onPressed: () {
-              addTaskCallback(newTaskTitle);
-            },
+            onPressed: onPressed,
             child: Text('Add', style: TextStyle(color: Colors.white)),
           ),
         ],

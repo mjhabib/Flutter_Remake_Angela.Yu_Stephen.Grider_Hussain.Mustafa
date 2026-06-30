@@ -6,15 +6,18 @@ class TaskTile extends StatelessWidget {
     required this.name,
     required this.value,
     required this.onChanged,
+    required this.onLongPress,
   });
 
   final String name;
   final bool value;
   final ValueChanged<bool?>? onChanged;
+  final void Function()? onLongPress;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onLongPress: onLongPress,
       title: Text(
         name,
         style: TextStyle(decoration: value ? TextDecoration.lineThrough : null),

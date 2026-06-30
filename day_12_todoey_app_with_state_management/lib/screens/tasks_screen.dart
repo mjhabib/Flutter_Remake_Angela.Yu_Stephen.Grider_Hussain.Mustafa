@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:todoey_app/models/task.dart';
 import 'package:todoey_app/widgets/tasks_list.dart';
 import 'package:todoey_app/screens/add_task_screen.dart';
 import 'package:todoey_app/providers/task_data_provider.dart';
@@ -11,26 +10,14 @@ class TasksScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // using a provider to pass data around the widgets
     final tasks = ref.watch(taskDataProvider);
-    // using a provider getter or its method to get the tasks' length
-    final taskCount = ref.read(taskDataProvider.notifier).taskCount;
-    // Or
-    // final taskCount = ref.read(taskDataProvider.notifier).taskCount();
     return Scaffold(
       backgroundColor: Colors.lightBlueAccent,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
             context: context,
-            builder: (context) => AddTaskScreen(
-              addTaskCallback: (newTaskTitle) {
-                // setState(() {
-                tasks.add(Task(name: newTaskTitle));
-                Navigator.pop(context);
-                // });
-              },
-            ),
+            builder: (context) => AddTaskScreen(),
           );
         },
         backgroundColor: Colors.lightBlueAccent,
@@ -64,7 +51,7 @@ class TasksScreen extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  '$taskCount tasks',
+                  '${tasks.length} tasks',
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],

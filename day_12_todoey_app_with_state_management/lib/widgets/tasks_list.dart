@@ -11,20 +11,17 @@ class TasksList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // using a provider to pass data around the widgets
     final tasks = ref.watch(taskDataProvider);
-    // using a provider getter or its method to get the tasks' length
-    final taskCount = ref.read(taskDataProvider.notifier).taskCount;
-    // Or
-    // final taskCount = ref.read(taskDataProvider.notifier).taskCount();
     return ListView.builder(
-      itemCount: taskCount,
+      itemCount: tasks.length,
       itemBuilder: (context, index) {
         return TaskTile(
           name: tasks[index].name,
           value: tasks[index].isDone,
-          onChanged: (newValue) {
-            // setState(() {
-            tasks[index].toggleDone();
-            // });
+          onChanged: (_) {
+            ref.read(taskDataProvider.notifier).updateTask(tasks[index]);
+          },
+          onLongPress: () {
+            ref.read(taskDataProvider.notifier).removeTask(tasks[index]);
           },
         );
       },
