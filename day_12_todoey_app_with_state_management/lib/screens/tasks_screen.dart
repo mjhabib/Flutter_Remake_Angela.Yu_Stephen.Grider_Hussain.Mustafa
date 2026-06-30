@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:todoey_app/models/task.dart';
 import 'package:todoey_app/widgets/tasks_list.dart';
 import 'package:todoey_app/screens/add_task_screen.dart';
+import 'package:todoey_app/providers/task_data_provider.dart';
 
-class TasksScreen extends StatefulWidget {
+class TasksScreen extends ConsumerWidget {
   const TasksScreen({super.key});
 
   @override
-  State<TasksScreen> createState() => _TasksScreenState();
-}
-
-class _TasksScreenState extends State<TasksScreen> {
-  // what we did here is called "lifting state up" by passing tasks from a child widget (TasksList) to it's parent widget (here)
-  List<Task> tasks = [];
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // using a provider to pass data around the widgets
+    final tasks = ref.watch(taskDataProvider);
+    // using a provider getter or its method to get the tasks' length
+    final taskCount = ref.read(taskDataProvider.notifier).taskCount;
+    // Or
+    // final taskCount = ref.read(taskDataProvider.notifier).taskCount();
     return Scaffold(
       backgroundColor: Colors.lightBlueAccent,
       floatingActionButton: FloatingActionButton(
@@ -25,10 +25,10 @@ class _TasksScreenState extends State<TasksScreen> {
             context: context,
             builder: (context) => AddTaskScreen(
               addTaskCallback: (newTaskTitle) {
-                setState(() {
-                  tasks.add(Task(name: newTaskTitle));
-                  Navigator.pop(context);
-                });
+                // setState(() {
+                tasks.add(Task(name: newTaskTitle));
+                Navigator.pop(context);
+                // });
               },
             ),
           );
@@ -64,7 +64,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   ),
                 ),
                 Text(
-                  '${tasks.length} tasks',
+                  '$taskCount tasks',
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
@@ -81,7 +81,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: TasksList(tasks: tasks),
+              child: TasksList(),
             ),
           ),
         ],

@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:todoey_app/models/task.dart';
 import 'package:todoey_app/widgets/task_tile.dart';
+import 'package:todoey_app/providers/task_data_provider.dart';
 
-class TasksList extends StatefulWidget {
-  const TasksList({super.key, required this.tasks});
-  final List<Task> tasks;
-
-  @override
-  State<TasksList> createState() => _TasksListState();
-}
-
-class _TasksListState extends State<TasksList> {
-  bool isChecked = false;
+class TasksList extends ConsumerWidget {
+  const TasksList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // instead of using a regular ListView to build a list of tasks, the builder only builds as many items as we can see (or fit the screen). That way, if we have hundreds of tasks, we're gonna save a lot of memory/recourses.
-    // the itemCount builds as many as tasks we have in our list
+  Widget build(BuildContext context, WidgetRef ref) {
+    // using a provider to pass data around the widgets
+    final tasks = ref.watch(taskDataProvider);
+    // using a provider getter or its method to get the tasks' length
+    final taskCount = ref.read(taskDataProvider.notifier).taskCount;
+    // Or
+    // final taskCount = ref.read(taskDataProvider.notifier).taskCount();
     return ListView.builder(
-      itemCount: widget.tasks.length,
+      itemCount: taskCount,
       itemBuilder: (context, index) {
         return TaskTile(
-          name: widget.tasks[index].name,
-          value: widget.tasks[index].isDone,
+          name: tasks[index].name,
+          value: tasks[index].isDone,
           onChanged: (newValue) {
-            setState(() {
-              widget.tasks[index].toggleDone();
-            });
+            // setState(() {
+            tasks[index].toggleDone();
+            // });
           },
         );
       },
