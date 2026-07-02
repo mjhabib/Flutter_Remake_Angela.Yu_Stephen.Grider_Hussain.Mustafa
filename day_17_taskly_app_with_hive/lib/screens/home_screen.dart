@@ -93,15 +93,45 @@ class _HomeScreenState extends State<HomeScreen> {
           content: Column(
             children: [
               TextField(
+                autofocus: true,
                 onChanged: (value) {
                   setState(() {
                     taskName = value;
                   });
                 },
-                onSubmitted: (value) {},
+                onSubmitted: (_) {
+                  if (taskName != null) {
+                    var task = Task(
+                      title: taskName!,
+                      time: DateTime.now(),
+                      isDone: false,
+                    );
+                    box!.add(task.toMap());
+                    setState(() {
+                      taskName = null;
+                    });
+                    Navigator.pop(context);
+                  }
+                },
               ),
               SizedBox(height: 20),
-              ElevatedButton(onPressed: () {}, child: Text('Add')),
+              ElevatedButton(
+                onPressed: () {
+                  if (taskName != null) {
+                    var task = Task(
+                      title: taskName!,
+                      time: DateTime.now(),
+                      isDone: false,
+                    );
+                    box!.add(task.toMap());
+                    setState(() {
+                      taskName = null;
+                    });
+                    Navigator.pop(context);
+                  }
+                },
+                child: Text('Add'),
+              ),
             ],
           ),
         );
