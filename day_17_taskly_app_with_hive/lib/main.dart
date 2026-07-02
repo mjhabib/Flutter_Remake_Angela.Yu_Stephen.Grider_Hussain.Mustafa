@@ -14,7 +14,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(primarySwatch: Colors.lightGreen),
       title: 'Taskly',
-      home: Scaffold(body: HomeScreen()),
+      home: HomeScreen(),
     );
   }
 }
