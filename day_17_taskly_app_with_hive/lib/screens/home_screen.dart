@@ -71,6 +71,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 : Icons.check_box_outline_blank,
             color: Colors.lightGreen,
           ),
+          onTap: () {
+            setState(() {
+              task.isDone = !task.isDone;
+              box!.putAt(index, task.toMap());
+            });
+          },
+          onLongPress: () {
+            setState(() {
+              box!.deleteAt(index);
+            });
+          },
         );
       },
     );
