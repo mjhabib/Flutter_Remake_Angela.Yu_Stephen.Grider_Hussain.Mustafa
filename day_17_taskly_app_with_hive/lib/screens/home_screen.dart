@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import 'package:taskly_app/models/task.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late double deviceHeight, deviceWidth;
   String? taskName;
+  Box? box;
   @override
   Widget build(BuildContext context) {
     deviceHeight = MediaQuery.of(context).size.height;
@@ -20,23 +24,55 @@ class _HomeScreenState extends State<HomeScreen> {
         toolbarHeight: deviceHeight * 0.15,
         title: Text('Taskly!', style: TextStyle(fontSize: 24)),
       ),
-      body: tasksList(),
+      body: tasksView(),
       floatingActionButton: addButton(),
     );
   }
 
-  Widget tasksList() {
-    return ListView(
-      children: [
-        ListTile(
+  Widget tasksView() {
+    // Task newTask = Task(
+    //   title: 'Add some dummy data to Hive DB',
+    //   time: DateTime.now(),
+    //   isDone: false,
+    // );
+    // box?.add(newTask.toMap());
+
+    return FutureBuilder(
+      future: Hive.openBox('tasks'),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          box = snapshot.data;
+          return tasksList();
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  ListView tasksList() {
+    List tasks = box!.values.toList();
+
+    return ListView.builder(
+      itemCount: tasks.length,
+      itemBuilder: (context, index) {
+        var task = Task.fromMap(tasks[index]);
+        return ListTile(
           title: Text(
-            'Do something',
-            style: TextStyle(decoration: TextDecoration.lineThrough),
+            task.title,
+            style: TextStyle(
+              decoration: task.isDone ? TextDecoration.lineThrough : null,
+            ),
           ),
-          subtitle: Text(DateTime.now().toString()),
-          trailing: Icon(Icons.check_box_outlined, color: Colors.lightGreen),
-        ),
-      ],
+          subtitle: Text(task.time.toString()),
+          trailing: Icon(
+            task.isDone
+                ? Icons.check_box_outlined
+                : Icons.check_box_outline_blank,
+            color: Colors.lightGreen,
+          ),
+        );
+      },
     );
   }
 
@@ -64,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 onSubmitted: (value) {},
               ),
+              SizedBox(height: 20),
               ElevatedButton(onPressed: () {}, child: Text('Add')),
             ],
           ),
