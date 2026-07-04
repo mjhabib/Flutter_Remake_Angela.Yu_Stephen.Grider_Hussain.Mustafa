@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'package:coingecko_app/screens/details_screen.dart';
 import 'package:coingecko_app/services/http_service.dart';
 
 void main() async {
@@ -19,6 +20,7 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   final httpService = HttpService();
   late double width, height;
+  String? selectedCoin = 'bitcoin';
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class _MainAppState extends State<MainApp> {
   }
 
   Widget coinDropdown() {
-    List<String> coins = ['Bitcoin'];
+    List<String> coins = ['bitcoin', 'ethereum', 'tether', 'cardano', 'ripple'];
     List<DropdownMenuItem<String>> items = coins.map((e) {
       return DropdownMenuItem(
         value: e,
@@ -62,18 +64,24 @@ class _MainAppState extends State<MainApp> {
       icon: Icon(Icons.arrow_drop_down_sharp, color: Colors.white),
       dropdownColor: Color.fromRGBO(83, 88, 206, 1),
       iconSize: 30,
-      value: coins.first,
+      value: selectedCoin,
       items: items,
-      onChanged: (value) {},
+      onChanged: (value) {
+        setState(() {
+          selectedCoin = value;
+        });
+      },
     );
   }
 
   Widget getData() {
     return FutureBuilder(
-      future: httpService.sendRequest('coins/bitcoin'),
+      future: httpService.sendRequest('coins/$selectedCoin'),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           Map data = jsonDecode(snapshot.data.toString());
+          Map<String, dynamic> exchangeRates =
+              data['market_data']['current_price'];
           num usdPrice = data['market_data']['current_price']['usd'];
           num change24h = data['market_data']['price_change_percentage_24h'];
 
@@ -82,7 +90,22 @@ class _MainAppState extends State<MainApp> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              coinImage(data['image']['large']),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return DetailsScreen(
+                          prices: exchangeRates,
+                          coin: selectedCoin,
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: coinImage(data['image']['large']),
+              ),
               currentPrice(usdPrice),
               percentageChange(change24h),
               descriptionCard(data['description']['en']),
