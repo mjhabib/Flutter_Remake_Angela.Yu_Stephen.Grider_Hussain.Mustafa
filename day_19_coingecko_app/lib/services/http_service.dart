@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HttpService {
@@ -14,11 +13,9 @@ class HttpService {
         url,
         options: Options(headers: {'x_cg_demo_api_key': _coinAPI}),
       );
-      print(response);
       return response;
     } catch (e) {
       print(e);
-      CircularProgressIndicator();
     }
     return null;
   }

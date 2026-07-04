@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -20,12 +21,6 @@ class _MainAppState extends State<MainApp> {
   late double width, height;
 
   @override
-  void initState() {
-    super.initState();
-    httpService.sendRequest('coins/bitcoin');
-  }
-
-  @override
   Widget build(BuildContext context) {
     width = MediaQuery.sizeOf(context).width;
     height = MediaQuery.sizeOf(context).height;
@@ -39,7 +34,7 @@ class _MainAppState extends State<MainApp> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
-              children: [coinDropdown()],
+              children: [coinDropdown(), getData()],
             ),
           ),
         ),
@@ -70,6 +65,40 @@ class _MainAppState extends State<MainApp> {
       value: coins.first,
       items: items,
       onChanged: (value) {},
+    );
+  }
+
+  Widget getData() {
+    return FutureBuilder(
+      future: httpService.sendRequest('coins/bitcoin'),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          Map data = jsonDecode(snapshot.data.toString());
+          num usdPrice = data['market_data']['current_price']['usd'];
+
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [currentPrice(usdPrice)],
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(color: Colors.white),
+          );
+        }
+      },
+    );
+  }
+
+  Widget currentPrice(num rate) {
+    return Text(
+      '${rate.toStringAsFixed(2)} USD',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 15,
+        fontWeight: FontWeight.w400,
+      ),
     );
   }
 }
