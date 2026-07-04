@@ -76,7 +76,7 @@ class _MainAppState extends State<MainApp> {
 
   Widget getData() {
     return FutureBuilder(
-      future: httpService.sendRequest('coins/$selectedCoin'),
+      future: httpService.sendRequestByHttp('coins/$selectedCoin'),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           Map data = jsonDecode(snapshot.data.toString());
