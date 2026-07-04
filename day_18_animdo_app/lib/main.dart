@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,10 +12,24 @@ class MainApp extends StatefulWidget {
   State<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends State<MainApp> {
+class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
   double buttonRadios = 100;
   // tween = in between
   final Tween<double> backgroundScale = Tween<double>(begin: 0, end: 1);
+  // animation controller
+  AnimationController? starIconAnimationController;
+
+  @override
+  void initState() {
+    super.initState();
+    starIconAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 5),
+    );
+    // starIconAnimationController!.forward(); // start
+    starIconAnimationController!.repeat();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,7 +37,15 @@ class _MainAppState extends State<MainApp> {
       home: Scaffold(
         body: Stack(
           clipBehavior: Clip.none,
-          children: [screenBackground(), circularButton()],
+          children: [
+            screenBackground(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [circularButton(), starIcon()],
+            ),
+          ],
         ),
       ),
     );
@@ -48,7 +71,7 @@ class _MainAppState extends State<MainApp> {
           });
         },
         child: AnimatedContainer(
-          duration: Duration(seconds: 5),
+          duration: Duration(seconds: 30),
           curve: Curves.bounceInOut,
           height: buttonRadios,
           width: buttonRadios,
@@ -59,6 +82,20 @@ class _MainAppState extends State<MainApp> {
           child: Center(child: Text('Basic')),
         ),
       ),
+    );
+  }
+
+  Widget starIcon() {
+    return AnimatedBuilder(
+      animation: starIconAnimationController!.view,
+      builder: (BuildContext context, Widget? child) {
+        return Transform.rotate(
+          // to convert degrees to radios we can multiply our value to 2 * pi
+          angle: starIconAnimationController!.value * 2 * pi,
+          child: child,
+        );
+      },
+      child: Icon(Icons.star, size: 100, color: Colors.white),
     );
   }
 }
