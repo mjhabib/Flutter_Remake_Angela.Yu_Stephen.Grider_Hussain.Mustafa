@@ -13,6 +13,8 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   double buttonRadios = 100;
+  // tween = in between
+  final Tween<double> backgroundScale = Tween<double>(begin: 0, end: 1);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,7 +29,14 @@ class _MainAppState extends State<MainApp> {
   }
 
   Widget screenBackground() {
-    return Container(color: Colors.blueAccent);
+    return TweenAnimationBuilder(
+      tween: backgroundScale,
+      duration: Duration(seconds: 30),
+      builder: (BuildContext context, double? value, Widget? child) {
+        return Transform.scale(scale: value, child: child);
+      },
+      child: Container(color: Colors.blueAccent),
+    );
   }
 
   Widget circularButton() {
