@@ -17,6 +17,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   final httpService = HttpService();
+  late double width, height;
 
   @override
   void initState() {
@@ -26,10 +27,49 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.sizeOf(context).width;
+    height = MediaQuery.sizeOf(context).height;
     return MaterialApp(
       title: 'CoinGecko App',
       theme: ThemeData(scaffoldBackgroundColor: Color.fromRGBO(88, 60, 197, 1)),
-      home: Scaffold(),
+      home: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [coinDropdown()],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget coinDropdown() {
+    List<String> coins = ['Bitcoin'];
+    List<DropdownMenuItem<String>> items = coins.map((e) {
+      return DropdownMenuItem(
+        value: e,
+        child: Text(
+          e,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 25,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      );
+    }).toList();
+
+    return DropdownButton(
+      icon: Icon(Icons.arrow_drop_down_sharp, color: Colors.white),
+      dropdownColor: Color.fromRGBO(83, 88, 206, 1),
+      iconSize: 30,
+      value: coins.first,
+      items: items,
+      onChanged: (value) {},
     );
   }
 }
