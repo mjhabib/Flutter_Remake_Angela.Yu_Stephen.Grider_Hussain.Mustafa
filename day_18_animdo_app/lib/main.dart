@@ -12,6 +12,7 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  double buttonRadios = 100;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,14 +33,21 @@ class _MainAppState extends State<MainApp> {
   Widget circularButton() {
     return Center(
       child: GestureDetector(
-        onTap: () {},
-        child: Container(
-          height: 100,
-          width: 100,
+        onTap: () {
+          setState(() {
+            buttonRadios += buttonRadios == 100 ? 100 : -100;
+          });
+        },
+        child: AnimatedContainer(
+          duration: Duration(seconds: 5),
+          curve: Curves.bounceInOut,
+          height: buttonRadios,
+          width: buttonRadios,
           decoration: BoxDecoration(
             color: Colors.purpleAccent,
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: BorderRadius.circular(buttonRadios),
           ),
+          child: Center(child: Text('Basic')),
         ),
       ),
     );
