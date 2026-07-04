@@ -75,12 +75,18 @@ class _MainAppState extends State<MainApp> {
         if (snapshot.hasData) {
           Map data = jsonDecode(snapshot.data.toString());
           num usdPrice = data['market_data']['current_price']['usd'];
+          num change24h = data['market_data']['price_change_percentage_24h'];
 
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
-            children: [currentPrice(usdPrice)],
+            children: [
+              coinImage(data['image']['large']),
+              currentPrice(usdPrice),
+              percentageChange(change24h),
+              descriptionCard(data['description']['en']),
+            ],
           );
         } else {
           return const Center(
@@ -91,14 +97,50 @@ class _MainAppState extends State<MainApp> {
     );
   }
 
+  Widget coinImage(String imgURL) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: height * 0.02),
+      height: height * 0.15,
+      width: width * 0.15,
+      decoration: BoxDecoration(
+        image: DecorationImage(image: NetworkImage(imgURL)),
+      ),
+    );
+  }
+
   Widget currentPrice(num rate) {
     return Text(
       '${rate.toStringAsFixed(2)} USD',
       style: TextStyle(
         color: Colors.white,
-        fontSize: 15,
+        fontSize: 20,
         fontWeight: FontWeight.w400,
       ),
+    );
+  }
+
+  Widget percentageChange(num change) {
+    return Text(
+      '${change.toString()}%',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 14,
+        fontWeight: FontWeight.w300,
+      ),
+    );
+  }
+
+  Widget descriptionCard(String description) {
+    return Container(
+      color: Color.fromRGBO(83, 88, 206, 0.5),
+      margin: EdgeInsets.symmetric(vertical: height * 0.05),
+      padding: EdgeInsets.symmetric(
+        vertical: height * 0.01,
+        horizontal: width * 0.01,
+      ),
+      height: height * 0.45,
+      width: width * 0.9,
+      child: Text(description, style: TextStyle(color: Colors.white)),
     );
   }
 }
