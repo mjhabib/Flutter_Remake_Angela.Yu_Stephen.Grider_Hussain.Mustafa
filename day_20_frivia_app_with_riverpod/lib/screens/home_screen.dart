@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:frivia_app/widgets/question_text.dart';
+
 // ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -12,7 +14,10 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: deviceHeight! * 0.05),
+          padding: EdgeInsets.symmetric(
+            vertical: deviceHeight! * 0.05,
+            horizontal: deviceWidth! * 0.05,
+          ),
           child: gameUI(),
         ),
       ),
@@ -25,28 +30,15 @@ class HomeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
       children: [
-        questionText(),
-        Center(
-          child: Column(
-            children: [
-              trueFalseButton('True', Colors.greenAccent, () {}),
-              SizedBox(height: deviceHeight! * 0.01),
-              trueFalseButton('False', Colors.redAccent, () {}),
-            ],
-          ),
+        QuestionText(),
+        Column(
+          children: [
+            trueFalseButton('True', Colors.greenAccent, () {}),
+            SizedBox(height: deviceHeight! * 0.01),
+            trueFalseButton('False', Colors.redAccent, () {}),
+          ],
         ),
       ],
-    );
-  }
-
-  Widget questionText() {
-    return Text(
-      'Some questions',
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w400,
-        color: Colors.white,
-      ),
     );
   }
 
