@@ -5,34 +5,55 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'quiz_brain.g.dart';
 
 @riverpod
+String difficulty(Ref ref) => 'easy';
+
+@riverpod
 class QuizBrain extends _$QuizBrain {
-  List? questions;
   int currentQuestionNum = 0;
 
   @override
-  Future<List<dynamic>> build(String difficulty) async {
-    return await _loadQuestions(difficulty: difficulty);
+  Future<List<dynamic>?> build() async {
+    return await _loadQuestions();
   }
 
-  Future<List<dynamic>> _loadQuestions({required String difficulty}) async {
+  Future<List<dynamic>?> _loadQuestions() async {
+    final difficulty = ref.watch(difficultyProvider);
     final url = Uri.https('opentdb.com', '/api.php', {
       'amount': '10',
       'type': 'boolean',
       'difficulty': difficulty,
     });
 
-    final response = await http.get(url);
+    try {
+      final response = await http.get(url);
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to load questions');
+      if (response.statusCode == 200) {
+        var json = jsonDecode(response.body);
+        return json['results'];
+      } else {
+        print('Server error: ${response.statusCode}');
+        return null; // Return null instead of crashing
+      }
+    } catch (e) {
+      print('Network error: $e');
+      return null;
     }
-
-    var json = jsonDecode(response.body);
-    return questions = json['results'];
   }
 
   String getCurrentQuestionText() {
-    return questions![currentQuestionNum]['question'];
+    final questions = state.value!;
+    return questions[currentQuestionNum]['question'];
+  }
+
+  void checkCurrentAnswer(String answer) {
+    final questions = state.value!;
+    bool isCorrect = questions[currentQuestionNum]['correct_answer'] == answer;
+    currentQuestionNum++;
+
+    // Notify listeners
+    // Not recommended but keeps the code simple
+    state = AsyncData([...state.value!]);
+    print(isCorrect ? 'correct' : 'incorrect');
   }
 }
 

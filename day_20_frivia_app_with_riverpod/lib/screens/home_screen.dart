@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:frivia_app/widgets/question_text.dart';
+import 'package:frivia_app/widgets/true_false_button.dart';
 
 // ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
@@ -33,26 +34,18 @@ class HomeScreen extends StatelessWidget {
         QuestionText(),
         Column(
           children: [
-            trueFalseButton('True', Colors.greenAccent, () {}),
+            TrueFalseButton(
+              labelAndAnswer: 'True',
+              selectedColor: Colors.greenAccent,
+            ),
             SizedBox(height: deviceHeight! * 0.01),
-            trueFalseButton('False', Colors.redAccent, () {}),
+            TrueFalseButton(
+              labelAndAnswer: 'False',
+              selectedColor: Colors.redAccent,
+            ),
           ],
         ),
       ],
-    );
-  }
-
-  Widget trueFalseButton(
-    String label,
-    Color selectedColor,
-    VoidCallback? onPressed,
-  ) {
-    return MaterialButton(
-      onPressed: onPressed,
-      color: selectedColor,
-      minWidth: deviceWidth! * 0.80,
-      height: deviceHeight! * 0.10,
-      child: Text(label, style: TextStyle(color: Colors.white, fontSize: 20)),
     );
   }
 }

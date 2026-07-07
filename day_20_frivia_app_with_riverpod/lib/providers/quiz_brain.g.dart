@@ -9,91 +9,87 @@ part of 'quiz_brain.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
+@ProviderFor(difficulty)
+final difficultyProvider = DifficultyProvider._();
+
+final class DifficultyProvider
+    extends $FunctionalProvider<String, String, String>
+    with $Provider<String> {
+  DifficultyProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'difficultyProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$difficultyHash();
+
+  @$internal
+  @override
+  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String create(Ref ref) {
+    return difficulty(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
+String _$difficultyHash() => r'8de64b1f3b6f0b55bc225beb7e14311ee93a96cd';
+
 @ProviderFor(QuizBrain)
-final quizBrainProvider = QuizBrainFamily._();
+final quizBrainProvider = QuizBrainProvider._();
 
 final class QuizBrainProvider
-    extends $AsyncNotifierProvider<QuizBrain, List<dynamic>> {
-  QuizBrainProvider._({
-    required QuizBrainFamily super.from,
-    required String super.argument,
-  }) : super(
-         retry: null,
-         name: r'quizBrainProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
+    extends $AsyncNotifierProvider<QuizBrain, List<dynamic>?> {
+  QuizBrainProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'quizBrainProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$quizBrainHash();
 
-  @override
-  String toString() {
-    return r'quizBrainProvider'
-        ''
-        '($argument)';
-  }
-
   @$internal
   @override
   QuizBrain create() => QuizBrain();
-
-  @override
-  bool operator ==(Object other) {
-    return other is QuizBrainProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
 }
 
-String _$quizBrainHash() => r'f06e25f9f133d885891f5b4fb409c039894d06ad';
+String _$quizBrainHash() => r'4da7c61fa21159ecaacccc0df04ca01306e73f39';
 
-final class QuizBrainFamily extends $Family
-    with
-        $ClassFamilyOverride<
-          QuizBrain,
-          AsyncValue<List<dynamic>>,
-          List<dynamic>,
-          FutureOr<List<dynamic>>,
-          String
-        > {
-  QuizBrainFamily._()
-    : super(
-        retry: null,
-        name: r'quizBrainProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  QuizBrainProvider call(String difficulty) =>
-      QuizBrainProvider._(argument: difficulty, from: this);
-
-  @override
-  String toString() => r'quizBrainProvider';
-}
-
-abstract class _$QuizBrain extends $AsyncNotifier<List<dynamic>> {
-  late final _$args = ref.$arg as String;
-  String get difficulty => _$args;
-
-  FutureOr<List<dynamic>> build(String difficulty);
+abstract class _$QuizBrain extends $AsyncNotifier<List<dynamic>?> {
+  FutureOr<List<dynamic>?> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<List<dynamic>>, List<dynamic>>;
+    final ref = this.ref as $Ref<AsyncValue<List<dynamic>?>, List<dynamic>?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<dynamic>>, List<dynamic>>,
-              AsyncValue<List<dynamic>>,
+              AnyNotifier<AsyncValue<List<dynamic>?>, List<dynamic>?>,
+              AsyncValue<List<dynamic>?>,
               Object?,
               Object?
             >;
-    return element.handleCreate(ref, () => build(_$args));
+    return element.handleCreate(ref, build);
   }
 }

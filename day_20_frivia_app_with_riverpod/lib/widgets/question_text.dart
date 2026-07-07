@@ -16,8 +16,8 @@ class QuestionText extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final unescape = HtmlUnescape();
-    final quizBrain = ref.watch(quizBrainProvider('easy'));
-    final questions = ref.read(quizBrainProvider('easy').notifier);
+    final quizBrain = ref.watch(quizBrainProvider);
+    final questions = ref.read(quizBrainProvider.notifier);
 
     return quizBrain.when(
       data: (_) => Text(
