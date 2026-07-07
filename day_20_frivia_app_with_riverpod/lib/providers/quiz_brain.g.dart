@@ -9,12 +9,10 @@ part of 'quiz_brain.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(difficulty)
+@ProviderFor(Difficulty)
 final difficultyProvider = DifficultyProvider._();
 
-final class DifficultyProvider
-    extends $FunctionalProvider<String, String, String>
-    with $Provider<String> {
+final class DifficultyProvider extends $NotifierProvider<Difficulty, String> {
   DifficultyProvider._()
     : super(
         from: null,
@@ -31,13 +29,7 @@ final class DifficultyProvider
 
   @$internal
   @override
-  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  String create(Ref ref) {
-    return difficulty(ref);
-  }
+  Difficulty create() => Difficulty();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(String value) {
@@ -48,7 +40,25 @@ final class DifficultyProvider
   }
 }
 
-String _$difficultyHash() => r'8de64b1f3b6f0b55bc225beb7e14311ee93a96cd';
+String _$difficultyHash() => r'c6b0c675889711e9d77e6d65c2639b649ee42b63';
+
+abstract class _$Difficulty extends $Notifier<String> {
+  String build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<String, String>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<String, String>,
+              String,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
 
 @ProviderFor(QuizBrain)
 final quizBrainProvider = QuizBrainProvider._();

@@ -5,7 +5,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'quiz_brain.g.dart';
 
 @riverpod
-String difficulty(Ref ref) => 'easy';
+class Difficulty extends _$Difficulty {
+  @override
+  String build() {
+    return 'easy';
+  }
+
+  void change(String newDifficulty) {
+    state = newDifficulty;
+  }
+}
 
 @riverpod
 class QuizBrain extends _$QuizBrain {
