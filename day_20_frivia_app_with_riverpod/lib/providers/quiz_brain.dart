@@ -11,6 +11,7 @@ String difficulty(Ref ref) => 'easy';
 class QuizBrain extends _$QuizBrain {
   int currentQuestionNum = 0;
   int totalQuestions = 10;
+  int correctAnswers = 0;
 
   @override
   Future<List<dynamic>?> build() async {
@@ -55,6 +56,11 @@ class QuizBrain extends _$QuizBrain {
     final questions = state.value!;
     bool isCorrect = questions[currentQuestionNum]['correct_answer'] == answer;
 
+    if (isCorrect) {
+      correctAnswers += 1;
+      state = AsyncData([...state.value!]);
+    }
+
     if (currentQuestionNum < totalQuestions - 1) {
       currentQuestionNum++;
 
@@ -65,6 +71,7 @@ class QuizBrain extends _$QuizBrain {
       // We don't increment anymore to avoid Index Error.
       // We reset for the next round.
       currentQuestionNum = 0;
+      correctAnswers = 0;
       state = AsyncData([...state.value!]);
     }
 

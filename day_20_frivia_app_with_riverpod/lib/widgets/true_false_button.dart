@@ -16,6 +16,10 @@ class TrueFalseButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final deviceHeight = MediaQuery.of(context).size.height;
     final deviceWidth = MediaQuery.of(context).size.width;
+
+    ref.watch(quizBrainProvider); // causes rebuild
+    final totalQuestions = ref.read(quizBrainProvider.notifier).totalQuestions;
+    final correctAnswers = ref.read(quizBrainProvider.notifier).correctAnswers;
     return MaterialButton(
       onPressed: () async {
         final bool isCorrect = ref
@@ -55,7 +59,7 @@ class TrueFalseButton extends ConsumerWidget {
                     "You finished the questions.",
                     style: TextStyle(fontSize: 25, color: Colors.white),
                   ),
-                  content: Text("Score: 0/0"),
+                  content: Text("Score: $correctAnswers/$totalQuestions"),
                 );
               },
             );
