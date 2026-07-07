@@ -41,7 +41,33 @@ class TrueFalseButton extends ConsumerWidget {
             Navigator.pop(context);
           }
         }
+
+        // check to see if the questions are ended:
+        final bool isGameOver = ref.read(quizBrainProvider.notifier).gameOver();
+        if (isGameOver) {
+          if (context.mounted) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  backgroundColor: Colors.blue,
+                  title: const Text(
+                    "You finished the questions.",
+                    style: TextStyle(fontSize: 25, color: Colors.white),
+                  ),
+                  content: Text("Score: 0/0"),
+                );
+              },
+            );
+            await Future.delayed(const Duration(seconds: 3));
+            if (context.mounted) {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            }
+          }
+        }
       },
+
       color: selectedColor,
       minWidth: deviceWidth * 0.80,
       height: deviceHeight * 0.10,

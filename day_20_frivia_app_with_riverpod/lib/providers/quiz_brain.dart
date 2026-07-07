@@ -10,6 +10,7 @@ String difficulty(Ref ref) => 'easy';
 @riverpod
 class QuizBrain extends _$QuizBrain {
   int currentQuestionNum = 0;
+  int totalQuestions = 10;
 
   @override
   Future<List<dynamic>?> build() async {
@@ -19,9 +20,9 @@ class QuizBrain extends _$QuizBrain {
   Future<List<dynamic>?> _loadQuestions() async {
     final difficulty = ref.watch(difficultyProvider);
     final url = Uri.https('opentdb.com', '/api.php', {
-      'amount': '10',
       'type': 'boolean',
       'difficulty': difficulty,
+      'amount': totalQuestions.toString(),
     });
 
     try {
@@ -42,19 +43,36 @@ class QuizBrain extends _$QuizBrain {
 
   String getCurrentQuestionText() {
     final questions = state.value!;
+
+    if (state.isLoading || state.hasError || state.value == null) {
+      return "Loading...";
+    }
+
     return questions[currentQuestionNum]['question'];
   }
 
   bool checkCurrentAnswer(String answer) {
     final questions = state.value!;
     bool isCorrect = questions[currentQuestionNum]['correct_answer'] == answer;
-    currentQuestionNum++;
 
-    // Notify listeners
-    // Not recommended but keeps the code simple
-    state = AsyncData([...state.value!]);
+    if (currentQuestionNum < totalQuestions - 1) {
+      currentQuestionNum++;
+
+      // Notify Riverpod that the state has changed (to refresh UI)
+      state = AsyncData([...state.value!]);
+    } else {
+      // We reached the end.
+      // We don't increment anymore to avoid Index Error.
+      // We reset for the next round.
+      currentQuestionNum = 0;
+      state = AsyncData([...state.value!]);
+    }
 
     return isCorrect;
+  }
+
+  bool gameOver() {
+    return currentQuestionNum == 0 && state.value != null;
   }
 }
 
