@@ -74,7 +74,7 @@ final class QuizBrainProvider
   QuizBrain create() => QuizBrain();
 }
 
-String _$quizBrainHash() => r'4da7c61fa21159ecaacccc0df04ca01306e73f39';
+String _$quizBrainHash() => r'd989215451c8d563054462cbe21fd74faf9a680a';
 
 abstract class _$QuizBrain extends $AsyncNotifier<List<dynamic>?> {
   FutureOr<List<dynamic>?> build();

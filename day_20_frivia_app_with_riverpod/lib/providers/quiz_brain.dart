@@ -45,7 +45,7 @@ class QuizBrain extends _$QuizBrain {
     return questions[currentQuestionNum]['question'];
   }
 
-  void checkCurrentAnswer(String answer) {
+  bool checkCurrentAnswer(String answer) {
     final questions = state.value!;
     bool isCorrect = questions[currentQuestionNum]['correct_answer'] == answer;
     currentQuestionNum++;
@@ -53,7 +53,8 @@ class QuizBrain extends _$QuizBrain {
     // Notify listeners
     // Not recommended but keeps the code simple
     state = AsyncData([...state.value!]);
-    print(isCorrect ? 'correct' : 'incorrect');
+
+    return isCorrect;
   }
 }
 

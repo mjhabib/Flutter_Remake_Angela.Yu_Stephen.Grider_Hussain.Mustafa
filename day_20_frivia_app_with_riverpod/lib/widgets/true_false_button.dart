@@ -17,8 +17,30 @@ class TrueFalseButton extends ConsumerWidget {
     final deviceHeight = MediaQuery.of(context).size.height;
     final deviceWidth = MediaQuery.of(context).size.width;
     return MaterialButton(
-      onPressed: () {
-        ref.read(quizBrainProvider.notifier).checkCurrentAnswer(labelAndAnswer);
+      onPressed: () async {
+        final bool isCorrect = ref
+            .read(quizBrainProvider.notifier)
+            .checkCurrentAnswer(labelAndAnswer);
+
+        // Crucial check for async gaps
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                backgroundColor: isCorrect ? Colors.green : Colors.red,
+                title: Icon(
+                  isCorrect ? Icons.check_circle : Icons.cancel_sharp,
+                  color: Colors.white,
+                ),
+              );
+            },
+          );
+          await Future.delayed(Duration(seconds: 1));
+          if (context.mounted) {
+            Navigator.pop(context);
+          }
+        }
       },
       color: selectedColor,
       minWidth: deviceWidth * 0.80,
