@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -11,6 +15,66 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late double deviceHeight, deviceWidth;
   late GlobalKey<FormState> registerFormKey = GlobalKey<FormState>();
   String? name, email, password;
+  Uint8List? selectedImageBytes;
+
+  Future<void> filePicker() async {
+    try {
+      FilePickerResult? result = await FilePicker.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+        withData: true, // CRITICAL: This loads bytes for web
+      );
+
+      if (result != null) {
+        PlatformFile file = result.files.first;
+
+        // On web, file.bytes will be populated because withData: true
+        if (file.bytes != null) {
+          setState(() {
+            selectedImageBytes = file.bytes;
+          });
+        } else {
+          // Fallback: Try reading from path (mobile/desktop only)
+          if (file.path != null) {
+            final File imageFile = File(file.path!);
+            final Uint8List bytes = await imageFile.readAsBytes();
+            setState(() {
+              selectedImageBytes = bytes;
+            });
+          } else {
+            print('No bytes or path available');
+          }
+        }
+      } else {
+        print('User canceled file picker');
+      }
+    } catch (e, stacktrace) {
+      print('Error picking file: $e');
+      print('Stacktrace: $stacktrace');
+
+      // Show error to user
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  // Future<void> imagePicker() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final XFile? imageFile = await picker.pickImage(
+  //     source: ImageSource.gallery,
+  //   );
+
+  //   if (imageFile != null) {
+  //     // Read the image bytes for web compatibility
+  //     final bytes = await imageFile.readAsBytes();
+  //     setState(() {
+  //       selectedImageBytes = bytes;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +91,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 registrationTitle(),
+                imageProfile(),
                 registrationForm(),
                 registrationButton(),
                 loginScreenLink(),
@@ -42,6 +107,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return const Text(
       "Register to Finstagram",
       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+    );
+  }
+
+  Widget imageProfile() {
+    return GestureDetector(
+      // onTap: imagePicker,
+      onTap: filePicker,
+      child: Container(
+        // to make it square we used only height as value
+        height: deviceHeight * 0.15,
+        width: deviceHeight * 0.15,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: selectedImageBytes != null
+                ? MemoryImage(selectedImageBytes!)
+                : const AssetImage('images/image_placeholder.png'),
+          ),
+        ),
+      ),
     );
   }
 
