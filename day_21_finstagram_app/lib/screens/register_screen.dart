@@ -17,6 +17,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? name, email, password;
   Uint8List? selectedImageBytes;
 
+  void validateUser() {
+    if (registerFormKey.currentState!.validate()) {
+      registerFormKey.currentState!.save();
+    }
+  }
+
   Future<void> filePicker() async {
     try {
       FilePickerResult? result = await FilePicker.pickFiles(
@@ -132,7 +138,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget registrationForm() {
     return SizedBox(
-      height: deviceHeight * 0.30,
+      height: deviceHeight * 0.40,
       child: Form(
         key: registerFormKey,
         child: Column(
@@ -193,7 +199,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget registrationButton() {
     return MaterialButton(
-      onPressed: () {},
+      onPressed: validateUser,
       minWidth: deviceWidth * 0.7,
       height: deviceHeight * 0.06,
       color: Colors.redAccent,
