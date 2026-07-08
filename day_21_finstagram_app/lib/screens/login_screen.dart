@@ -62,7 +62,12 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
-              children: [loginTitle(), loginForm(), loginButton()],
+              children: [
+                loginTitle(),
+                loginForm(),
+                loginButton(),
+                registerScreenLink(),
+              ],
             ),
           ),
         ),
@@ -92,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisSize: MainAxisSize.max,
           children: [
             mailPassTextFields(
-              textHint: 'email@something.com',
+              textHint: 'Email...',
               onSaved: (newValue) {
                 emailOnSaved(newValue);
               },
@@ -101,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             ),
             mailPassTextFields(
-              textHint: 'password...',
+              textHint: 'Password...',
               obscureText: true,
               onSaved: (newValue) {
                 passwordOnSaved(newValue);
@@ -142,6 +147,20 @@ class _LoginScreenState extends State<LoginScreen> {
           fontSize: 20,
           color: Colors.white,
           fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget registerScreenLink() {
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, 'register'),
+      child: Text(
+        'Or register instead...',
+        style: TextStyle(
+          color: Colors.blueAccent,
+          fontWeight: FontWeight.w200,
+          fontSize: 15,
         ),
       ),
     );
