@@ -12,6 +12,20 @@ class _LoginScreenState extends State<LoginScreen> {
   late GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
   String? emailValue, passwordValue;
 
+  void Function(String?)? emailOnSaved(String? newValue) {
+    setState(() {
+      emailValue = newValue;
+    });
+    return null;
+  }
+
+  void Function(String?)? passwordOnSaved(String? newValue) {
+    setState(() {
+      passwordValue = newValue;
+    });
+    return null;
+  }
+
   String? emailValidator(String? value) {
     bool result = value!.contains(
       RegExp(
@@ -25,6 +39,14 @@ class _LoginScreenState extends State<LoginScreen> {
     return value!.length > 6
         ? null
         : "Please enter a password greater than 6 characters.";
+  }
+
+  void validateUser() {
+    if (loginFormKey.currentState!.validate()) {
+      loginFormKey.currentState!.save();
+      print(emailValue);
+      print(passwordValue);
+    }
   }
 
   @override
@@ -61,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget loginForm() {
     return SizedBox(
-      height: deviceHeight * 0.20,
+      height: deviceHeight * 0.25,
       child: Form(
         key: loginFormKey,
         child: Column(
@@ -71,7 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             mailPassTextFields(
               textHint: 'email@something.com',
-              onSavedValue: emailValue,
+              onSaved: (newValue) {
+                emailOnSaved(newValue);
+              },
               validator: (String? value) {
                 return emailValidator(value);
               },
@@ -79,7 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
             mailPassTextFields(
               textHint: 'password...',
               obscureText: true,
-              onSavedValue: passwordValue,
+              onSaved: (newValue) {
+                passwordOnSaved(newValue);
+              },
               validator: (String? value) {
                 return passwordValidator(value);
               },
@@ -92,25 +118,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget mailPassTextFields({
     required String textHint,
-    required String? onSavedValue,
+    required void Function(String?)? onSaved,
     bool obscureText = false,
     required FormFieldValidator<String>? validator,
   }) {
     return TextFormField(
       obscureText: obscureText,
       decoration: InputDecoration(hint: Text(textHint)),
-      onSaved: (newValue) {
-        setState(() {
-          onSavedValue = newValue;
-        });
-      },
+      onSaved: onSaved,
       validator: validator,
     );
   }
 
   Widget loginButton() {
     return MaterialButton(
-      onPressed: () {},
+      onPressed: validateUser,
       minWidth: deviceWidth * 0.7,
       height: deviceHeight * 0.06,
       color: Colors.redAccent,
