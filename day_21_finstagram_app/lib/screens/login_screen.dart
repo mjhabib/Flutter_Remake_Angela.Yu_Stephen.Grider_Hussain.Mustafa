@@ -44,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void validateUser() {
     if (loginFormKey.currentState!.validate()) {
       loginFormKey.currentState!.save();
+      Navigator.pushNamed(context, 'home');
     }
   }
 

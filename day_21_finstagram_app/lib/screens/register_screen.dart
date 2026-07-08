@@ -20,6 +20,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void validateUser() {
     if (registerFormKey.currentState!.validate()) {
       registerFormKey.currentState!.save();
+      Navigator.pushNamed(context, 'home');
     }
   }
 
