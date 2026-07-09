@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                Navigator.popAndPushNamed(context, 'login');
               },
               child: const Icon(Icons.logout),
             ),

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 // import 'package:image_picker/image_picker.dart';
 
+import 'package:finstagram_app/services/firebase_brain.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -16,11 +18,51 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late GlobalKey<FormState> registerFormKey = GlobalKey<FormState>();
   String? name, email, password;
   Uint8List? selectedImageBytes;
+  FirebaseBrain? firebaseBrain;
+  String? errorMessage;
+  bool isLoading = false;
 
-  void validateUser() {
+  @override
+  void initState() {
+    super.initState();
+    firebaseBrain = FirebaseBrain();
+  }
+
+  void validateUser() async {
     if (registerFormKey.currentState!.validate()) {
       registerFormKey.currentState!.save();
-      Navigator.pushNamed(context, 'home');
+
+      setState(() {
+        isLoading = true;
+        errorMessage = null;
+      });
+
+      try {
+        final result = await firebaseBrain!.registerUser(
+          name: name!,
+          email: email!,
+          password: password!,
+          imageBytes: selectedImageBytes!,
+        );
+
+        setState(() {
+          isLoading = false;
+          if (!result.success) {
+            errorMessage = result.error;
+          }
+        });
+
+        // Navigate only if successful
+        if (mounted && result.success) {
+          Navigator.pushNamed(context, 'home');
+        }
+      } catch (e) {
+        // Catch any unexpected errors
+        setState(() {
+          isLoading = false;
+          errorMessage = 'An unexpected error occurred';
+        });
+      }
     }
   }
 
@@ -204,14 +246,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
       minWidth: deviceWidth * 0.7,
       height: deviceHeight * 0.06,
       color: Colors.redAccent,
-      child: const Text(
-        "Register",
-        style: TextStyle(
-          fontSize: 20,
-          color: Colors.white,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+      child: isLoading
+          ? CircularProgressIndicator(color: Colors.white)
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (errorMessage != null)
+                  Text(
+                    errorMessage!,
+                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                Text(
+                  'Register',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
     );
   }
 

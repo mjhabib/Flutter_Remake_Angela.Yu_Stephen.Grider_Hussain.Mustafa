@@ -187,16 +187,16 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 if (errorMessage != null)
                   Text(
-                    'Login',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    errorMessage!,
+                    style: TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 Text(
-                  errorMessage!,
-                  style: TextStyle(color: Colors.white, fontSize: 12),
+                  'Login',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
