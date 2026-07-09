@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:finstagram_app/services/firebase_brain.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -11,6 +13,9 @@ class _LoginScreenState extends State<LoginScreen> {
   late double deviceHeight, deviceWidth;
   late GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
   String? emailValue, passwordValue;
+  FirebaseBrain? firebaseBrain;
+  String? errorMessage;
+  bool isLoading = false;
 
   void Function(String?)? emailOnSaved(String? newValue) {
     setState(() {
@@ -41,11 +46,46 @@ class _LoginScreenState extends State<LoginScreen> {
         : "Please enter a password greater than 6 characters.";
   }
 
-  void validateUser() {
+  Future<void> validateUser() async {
     if (loginFormKey.currentState!.validate()) {
       loginFormKey.currentState!.save();
-      Navigator.pushNamed(context, 'home');
+
+      setState(() {
+        isLoading = true;
+        errorMessage = null;
+      });
+
+      try {
+        final result = await firebaseBrain!.loginUser(
+          email: emailValue!,
+          password: passwordValue!,
+        );
+
+        setState(() {
+          isLoading = false;
+          if (!result.success) {
+            errorMessage = result.error;
+          }
+        });
+
+        // Navigate only if successful
+        if (mounted && result.success) {
+          Navigator.pushNamed(context, 'home');
+        }
+      } catch (e) {
+        // Catch any unexpected errors
+        setState(() {
+          isLoading = false;
+          errorMessage = 'An unexpected error occurred';
+        });
+      }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseBrain = FirebaseBrain();
   }
 
   @override
@@ -140,14 +180,26 @@ class _LoginScreenState extends State<LoginScreen> {
       minWidth: deviceWidth * 0.7,
       height: deviceHeight * 0.06,
       color: Colors.redAccent,
-      child: Text(
-        'Login',
-        style: TextStyle(
-          fontSize: 20,
-          color: Colors.white,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+      child: isLoading
+          ? CircularProgressIndicator(color: Colors.white)
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (errorMessage != null)
+                  Text(
+                    'Login',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                Text(
+                  errorMessage!,
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ],
+            ),
     );
   }
 
