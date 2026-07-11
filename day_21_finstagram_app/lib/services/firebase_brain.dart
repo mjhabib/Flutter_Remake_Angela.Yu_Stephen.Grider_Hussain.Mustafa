@@ -29,6 +29,7 @@ class FirebaseBrain {
           .createUserWithEmailAndPassword(email: email, password: password);
       // save the user's UID
       String userID = userCredential.user!.uid;
+      currentUser = await _getUserData(uid: userCredential.user!.uid);
 
       // String fileName = '${Timestamp.now().millisecondsSinceEpoch}.jpg';
       // UploadTask uploadTask = _storage
@@ -112,5 +113,19 @@ class FirebaseBrain {
         .collection('posts')
         .orderBy('timestamp', descending: true)
         .snapshots();
+  }
+
+  // Get the user's posts
+  Stream<QuerySnapshot> getPostsForUser() {
+    String userID = _auth.currentUser!.uid;
+    return _db
+        .collection('posts')
+        .where('userId', isEqualTo: userID)
+        .snapshots();
+  }
+
+  // Log out user
+  Future<void> logout() async {
+    await _auth.signOut();
   }
 }
