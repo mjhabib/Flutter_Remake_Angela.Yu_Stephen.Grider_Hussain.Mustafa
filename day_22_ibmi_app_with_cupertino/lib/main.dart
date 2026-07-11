@@ -11,6 +11,9 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
+      theme: const CupertinoThemeData(
+        scaffoldBackgroundColor: CupertinoColors.lightBackgroundGray,
+      ),
       title: 'IBMI App',
       initialRoute: '/',
       routes: {'/': (p0) => MainScreen()},
