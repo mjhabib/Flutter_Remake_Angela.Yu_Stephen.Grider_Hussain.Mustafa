@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+
 import 'package:ibmi_app/widgets/info_card.dart';
 
 class BMIScreen extends StatefulWidget {
@@ -10,6 +11,7 @@ class BMIScreen extends StatefulWidget {
 
 class _BMIScreenState extends State<BMIScreen> {
   double? deviceHeight, deviceWidth;
+  int age = 25;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,18 @@ class _BMIScreenState extends State<BMIScreen> {
           child: InfoCard(
             height: deviceHeight! * 0.20,
             width: deviceWidth! * 0.45,
-            child: Column(),
+            textTitle: 'Age',
+            textValue: age.toString(),
+            onPressedAdd: () {
+              setState(() {
+                age++;
+              });
+            },
+            onPressedMinus: () {
+              setState(() {
+                age--;
+              });
+            },
           ),
         ),
       ),
