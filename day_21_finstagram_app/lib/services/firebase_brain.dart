@@ -105,4 +105,12 @@ class FirebaseBrain {
       return false;
     }
   }
+
+  // Get all the posts
+  Stream<QuerySnapshot> getLatestPosts() {
+    return _db
+        .collection('posts')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+  }
 }
