@@ -21,6 +21,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       child: CupertinoTabScaffold(
         tabBar: CupertinoTabBar(
+          backgroundColor: CupertinoColors.lightBackgroundGray,
           items: [
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.home),
