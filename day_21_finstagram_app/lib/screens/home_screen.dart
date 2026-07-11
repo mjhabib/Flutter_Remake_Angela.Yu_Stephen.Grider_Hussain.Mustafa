@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:finstagram_app/screens/feed_screen.dart';
 import 'package:finstagram_app/screens/profile_screen.dart';
+import 'package:finstagram_app/services/file_uploader.dart';
+import 'package:finstagram_app/services/firebase_brain.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,9 +12,26 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+// Using a mixin for image picking capabilities
+class _HomeScreenState extends State<HomeScreen> with FilePickerMixin {
   int screenIndex = 0;
+  FirebaseBrain? firebaseBrain;
   final List<Widget> selectedScreen = [FeedScreen(), ProfileScreen()];
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseBrain = FirebaseBrain();
+  }
+
+  void pickAndUploadImage() async {
+    try {
+      await pickImage();
+      await firebaseBrain!.postImage(selectedImageBytes!);
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("Finstagram Home"),
         actions: [
-          GestureDetector(onTap: () {}, child: const Icon(Icons.add_a_photo)),
+          GestureDetector(
+            onTap: pickAndUploadImage,
+            child: const Icon(Icons.add_a_photo),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: GestureDetector(

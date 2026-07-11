@@ -76,4 +76,33 @@ class FirebaseBrain {
     DocumentSnapshot doc = await _db.collection('users').doc(uid).get();
     return doc.data() as Map;
   }
+
+  // Post a new image
+  Future<bool> postImage(Uint8List imageBytes) async {
+    try {
+      String userId = _auth.currentUser!.uid;
+
+      // String fileName = '${Timestamp.now().millisecondsSinceEpoch}.jpg';
+      // UploadTask uploadTask = _storage
+      //     .ref('images/$userID/$fileName')
+      //     .putData(imageBytes);
+      // TaskSnapshot snapshot = await uploadTask;
+      // String imageURL = await snapshot.ref.getDownloadURL();
+
+      // an static image path from the internet instead of firebase_storage
+      String imageURL =
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Liv_Tyler_2008.jpg/500px-Liv_Tyler_2008.jpg';
+
+      // Store user info with the image URL
+      await _db.collection('posts').add({
+        "userId": userId,
+        "timestamp": Timestamp.now(),
+        "image": imageURL,
+      });
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }
