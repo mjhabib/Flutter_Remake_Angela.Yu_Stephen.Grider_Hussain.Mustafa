@@ -1,17 +1,24 @@
 import 'package:flutter/cupertino.dart';
+import 'package:ibmi_app/widgets/history_card.dart';
 
-class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+// ignore: must_be_immutable
+class HistoryScreen extends StatelessWidget {
+  HistoryScreen({super.key});
 
-  @override
-  State<HistoryScreen> createState() => _HistoryScreenState();
-}
+  double? deviceHeight, deviceWidth;
 
-class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
+    deviceHeight = MediaQuery.of(context).size.height;
+    deviceWidth = MediaQuery.of(context).size.width;
+
     return CupertinoPageScaffold(
-      child: Container(color: CupertinoColors.systemYellow),
+      child: Center(
+        child: HistoryCard(
+          height: deviceHeight! * 0.25,
+          width: deviceWidth! * 0.75,
+        ),
+      ),
     );
   }
 }

@@ -1,11 +1,11 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
-import 'package:ibmi_app/widgets/calculate_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:ibmi_app/widgets/info_card.dart';
 import 'package:ibmi_app/widgets/height_card.dart';
 import 'package:ibmi_app/widgets/gender_card.dart';
+import 'package:ibmi_app/widgets/calculate_button.dart';
 
 class BMIScreen extends StatefulWidget {
   const BMIScreen({super.key});
@@ -43,6 +43,7 @@ class _BMIScreenState extends State<BMIScreen> {
                 CupertinoDialogAction(
                   child: Text('OK'),
                   onPressed: () {
+                    saveResults(bmi.toStringAsFixed(2), health!);
                     Navigator.pop(context);
                   },
                 ),
@@ -54,6 +55,17 @@ class _BMIScreenState extends State<BMIScreen> {
     }
   }
 
+  void saveResults(String bmi, String health) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final today = DateTime.now();
+    await prefs.setString(
+      'date',
+      '${today.month}/${today.day}/${today.year} - ${today.hour}:${today.minute}',
+    );
+    await prefs.setStringList('data', <String>[bmi, health]);
+  }
+
   @override
   Widget build(BuildContext context) {
     deviceHeight = MediaQuery.of(context).size.height;
@@ -61,6 +73,7 @@ class _BMIScreenState extends State<BMIScreen> {
 
     return CupertinoPageScaffold(
       child: Container(
+        padding: EdgeInsets.only(top: deviceHeight! * 0.02),
         height: deviceHeight! * 0.95,
         color: CupertinoColors.white,
         child: Column(
