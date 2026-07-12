@@ -46,9 +46,9 @@ class InfoCard extends StatelessWidget {
           Text(
             textValue,
             style: TextStyle(
-              fontSize: 44,
+              fontSize: 36,
               color: CupertinoColors.black,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w900,
             ),
           ),
           Row(
