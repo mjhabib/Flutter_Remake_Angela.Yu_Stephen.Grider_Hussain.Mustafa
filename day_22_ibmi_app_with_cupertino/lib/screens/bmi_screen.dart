@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:ibmi_app/widgets/calculate_button.dart';
 
@@ -15,6 +17,42 @@ class BMIScreen extends StatefulWidget {
 class _BMIScreenState extends State<BMIScreen> {
   double? deviceHeight, deviceWidth;
   int age = 25, weight = 62, height = 170, gender = 0;
+
+  void calculateBMI() {
+    String? health;
+    if (age > 0 && weight > 0 && height > 0) {
+      double bmi = (weight / pow(height, 2) * 10000);
+
+      if (bmi < 18.5) {
+        health = 'Underweight';
+      } else if (bmi >= 18.5 && bmi < 24.9) {
+        health = 'Healthy';
+      } else if (bmi >= 25 && bmi < 29.9) {
+        health = 'Overweight';
+      } else if (bmi >= 30) {
+        health = 'Obese';
+      }
+      setState(() {
+        showCupertinoDialog(
+          context: context,
+          builder: (context) {
+            return CupertinoAlertDialog(
+              title: Text(health!),
+              content: Text(bmi.toStringAsFixed(2)),
+              actions: [
+                CupertinoDialogAction(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +128,10 @@ class _BMIScreenState extends State<BMIScreen> {
                 });
               },
             ),
-            CalculateButton(height: deviceHeight! * 0.08, onPressed: () {}),
+            CalculateButton(
+              height: deviceHeight! * 0.08,
+              onPressed: calculateBMI,
+            ),
           ],
         ),
       ),
