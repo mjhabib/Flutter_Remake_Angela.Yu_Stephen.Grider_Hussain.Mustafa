@@ -58,8 +58,6 @@ class Deck {
 
   // filter cards based on a specific suit we pass on
   Iterable<Card> cardsWithSuit(String suit) {
-    return cards.where((card) {
-      return card.suit == suit;
-    });
+    return cards.where((card) => card.suit == suit);
   }
 }
