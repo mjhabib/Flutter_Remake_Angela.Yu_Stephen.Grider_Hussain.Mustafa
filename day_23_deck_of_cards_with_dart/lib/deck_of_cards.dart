@@ -60,4 +60,14 @@ class Deck {
   Iterable<Card> cardsWithSuit(String suit) {
     return cards.where((card) => card.suit == suit);
   }
+
+  // deal any number of cards to the user
+  List<Card> deal(int handSize) {
+    var hand = cards.sublist(0, handSize);
+
+    // since sublist won't remove any dealt cards from the original list, we re-write the list of cards by remaining (not dealt) cards
+    cards = cards.sublist(handSize);
+
+    return hand;
+  }
 }
