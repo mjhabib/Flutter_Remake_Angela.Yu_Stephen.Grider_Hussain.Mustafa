@@ -50,4 +50,9 @@ class Deck {
   String toString() {
     return cards.toString();
   }
+
+  // shuffle all the cards
+  void shuffle() {
+    cards.shuffle();
+  }
 }
