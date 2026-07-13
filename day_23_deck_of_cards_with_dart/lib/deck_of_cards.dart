@@ -35,7 +35,7 @@ class Deck {
 
     for (var rank in ranks) {
       for (var suit in suits) {
-        var card = Card(rank, suit);
+        var card = Card(suit, rank);
         cards.add(card);
       }
     }
@@ -54,5 +54,12 @@ class Deck {
   // shuffle all the cards
   void shuffle() {
     cards.shuffle();
+  }
+
+  // filter cards based on a specific suit we pass on
+  Iterable<Card> cardsWithSuit(String suit) {
+    return cards.where((card) {
+      return card.suit == suit;
+    });
   }
 }
