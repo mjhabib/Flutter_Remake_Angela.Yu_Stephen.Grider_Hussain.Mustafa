@@ -2,11 +2,11 @@ class Card {
   String rank;
   String suit;
 
-  Card(this.rank, this.suit);
+  Card({required this.rank, required this.suit});
 
   @override
   String toString() {
-    return '$suit of $rank';
+    return '$rank of $suit';
   }
 }
 
@@ -15,8 +15,8 @@ class Deck {
 
   // initialize a list of 52 cards the moment we call the Deck class
   Deck() {
-    var ranks = ['Diamonds', 'Hearts', 'Clubs', 'Spades'];
-    var suits = [
+    var suits = ['Diamonds', 'Hearts', 'Clubs', 'Spades'];
+    var ranks = [
       'Ace',
       'One',
       'Two',
@@ -33,9 +33,9 @@ class Deck {
       'King',
     ];
 
-    for (var rank in ranks) {
-      for (var suit in suits) {
-        var card = Card(suit, rank);
+    for (var suit in suits) {
+      for (var rank in ranks) {
+        var card = Card(suit: suit, rank: rank);
         cards.add(card);
       }
     }
@@ -57,12 +57,12 @@ class Deck {
   }
 
   // filter cards based on a specific suit we pass on
-  Iterable<Card> cardsWithSuit(String suit) {
+  Iterable<Card> cardsWithSuit({required String suit}) {
     return cards.where((card) => card.suit == suit);
   }
 
   // deal any number of cards to the user
-  List<Card> deal(int handSize) {
+  List<Card> deal({required int handSize}) {
     var hand = cards.sublist(0, handSize);
 
     // since sublist won't remove any dealt cards from the original list, we re-write the list of cards by remaining (not dealt) cards
@@ -72,7 +72,7 @@ class Deck {
   }
 
   // remove a card from our deck
-  void removeCard(String rank, String suit) {
+  void removeCard({required String rank, required String suit}) {
     cards.removeWhere((card) => card.suit == suit && card.rank == rank);
   }
 }

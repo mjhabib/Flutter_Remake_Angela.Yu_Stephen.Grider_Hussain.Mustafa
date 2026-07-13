@@ -5,12 +5,12 @@ void main() {
   deck.shuffle();
 
   print('\n Only Diamonds:');
-  print(deck.cardsWithSuit('Diamonds'));
+  print(deck.cardsWithSuit(suit: 'Diamonds'));
 
   print('\n Dealt cards:');
-  print(deck.deal(4));
+  print(deck.deal(handSize: 4));
 
-  deck.removeCard('Ace', 'Hearts');
+  deck.removeCard(rank: 'Ace', suit: 'Hearts');
   print('\n Remaining cards:');
   print(deck);
 }
