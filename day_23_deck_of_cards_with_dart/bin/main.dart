@@ -9,4 +9,8 @@ void main() {
 
   print('\n Dealt cards:');
   print(deck.deal(4));
+
+  deck.removeCard('Ace', 'Hearts');
+  print('\n Remaining cards:');
+  print(deck);
 }
