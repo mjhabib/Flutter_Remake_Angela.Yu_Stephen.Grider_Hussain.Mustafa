@@ -9,13 +9,22 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final textController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  String? email, password;
+
+  void onPressed() {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      print('Email: $email and password: $password');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(20),
       child: Form(
+        key: formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -39,24 +48,40 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget emailField() {
     return TextFormField(
       autofocus: true,
-      controller: textController,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         labelText: 'Email:',
         hintText: 'you@email.com',
       ),
+      validator: (value) {
+        if (value!.isEmpty && !value.contains('@')) {
+          return 'Please enter a valid email';
+        }
+        return null;
+      },
+      onSaved: (newValue) {
+        email = newValue;
+      },
     );
   }
 
   Widget passwordField() {
     return TextFormField(
       obscureText: true,
-      controller: textController,
       decoration: InputDecoration(labelText: 'Password:', hintText: '123abc'),
+      validator: (value) {
+        if (value!.isEmpty && value.length < 6) {
+          return 'Please enter a password greater than 6 characters';
+        }
+        return null;
+      },
+      onSaved: (newValue) {
+        password = newValue;
+      },
     );
   }
 
   Widget submitButton() {
-    return ElevatedButton(onPressed: () {}, child: Text('Submit'));
+    return ElevatedButton(onPressed: onPressed, child: Text('Submit'));
   }
 }
