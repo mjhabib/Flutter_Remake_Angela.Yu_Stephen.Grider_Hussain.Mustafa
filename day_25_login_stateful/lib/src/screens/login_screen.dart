@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_keypad/virtual_keypad.dart';
 
+import 'package:login_stateful/src/mixins/validation_mixin.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -8,7 +10,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
   final formKey = GlobalKey<FormState>();
   String? email, password;
 
@@ -53,12 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
         labelText: 'Email:',
         hintText: 'you@email.com',
       ),
-      validator: (value) {
-        if (value!.isEmpty && !value.contains('@')) {
-          return 'Please enter a valid email';
-        }
-        return null;
-      },
+      validator: validateEmail,
       onSaved: (newValue) {
         email = newValue;
       },
@@ -69,12 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return TextFormField(
       obscureText: true,
       decoration: InputDecoration(labelText: 'Password:', hintText: '123abc'),
-      validator: (value) {
-        if (value!.isEmpty && value.length < 6) {
-          return 'Please enter a password greater than 6 characters';
-        }
-        return null;
-      },
+      validator: validatePassword,
       onSaved: (newValue) {
         password = newValue;
       },
