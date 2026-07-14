@@ -4,6 +4,7 @@ import 'package:http/http.dart' show get;
 // we only care about the get function not all the http functionalities
 // this will avoid mistakes, it's better for clarity and conflicts (doesn't make project lighter/faster)
 import 'package:pics_app/src/models/image_model.dart';
+import 'package:pics_app/src/widgets/image_list.dart';
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -14,6 +15,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   int counter = 1;
+  List<ImageModel> images = [];
 
   void fetchImage() async {
     try {
@@ -22,7 +24,11 @@ class _MainAppState extends State<MainApp> {
       );
       if (response.statusCode >= 200) {
         final parsedJson = json.decode(response.body);
-        var imageModel = ImageModel.fromJson(parsedJson);
+        final imageModel = ImageModel.fromJson(parsedJson);
+
+        setState(() {
+          images.add(imageModel);
+        });
       }
       counter++;
     } catch (e) {
@@ -40,7 +46,7 @@ class _MainAppState extends State<MainApp> {
       ),
       home: Scaffold(
         appBar: AppBar(title: Text("Let's see some images!")),
-        body: Center(child: Text('$counter images')),
+        body: Center(child: ImageList(images: images)),
         floatingActionButton: FloatingActionButton.extended(
           label: Icon(Icons.add_a_photo),
           onPressed: fetchImage,
