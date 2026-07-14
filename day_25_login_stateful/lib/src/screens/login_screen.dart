@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_keypad/virtual_keypad.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -8,6 +9,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,6 +24,12 @@ class _LoginScreenState extends State<LoginScreen> {
             passwordField(),
             SizedBox(height: 20),
             submitButton(),
+            SizedBox(height: 10),
+            VirtualKeypad(
+              standalone: true,
+              initialLanguage: 'en',
+              availableLanguages: ['en', 'ar'],
+            ),
           ],
         ),
       ),
@@ -30,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget emailField() {
     return TextFormField(
       autofocus: true,
+      controller: textController,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         labelText: 'Email:',
@@ -41,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget passwordField() {
     return TextFormField(
       obscureText: true,
+      controller: textController,
       decoration: InputDecoration(labelText: 'Password:', hintText: '123abc'),
     );
   }
