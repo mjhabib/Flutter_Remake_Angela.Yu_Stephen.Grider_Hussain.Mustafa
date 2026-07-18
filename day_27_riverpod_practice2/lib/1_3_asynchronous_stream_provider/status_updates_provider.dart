@@ -2,6 +2,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'status_updates_provider.g.dart';
 
+/* This pattern is used to handle real-time data pipelines that emit multiple updates over time—such as listening to a chat room database, tracking a user's live GPS location, or handling web sockets.
+Just like a FutureProvider, the UI receives the emitted data wrapped in an AsyncValue to seamlessly handle loading and error cycles. */
+
 // Returning a Stream automatically tells the generator to set up a StreamProvider.
 // This function name generates "statusUpdatesProvider".
 @riverpod
