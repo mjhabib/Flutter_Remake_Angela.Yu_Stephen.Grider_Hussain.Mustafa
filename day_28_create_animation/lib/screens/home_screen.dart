@@ -41,7 +41,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       onTap: onTap,
       child: Stack(
         clipBehavior: Clip.none,
-        children: [buildCatAnimation(), buildBox()],
+        children: [
+          buildCatAnimation(),
+          buildBox(),
+          buildLeftFlap(),
+          buildRightFlap(),
+        ],
       ),
     );
   }
@@ -65,4 +70,34 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget buildBox() {
     return Container(width: 300, height: 250, color: Colors.blueGrey);
   }
+
+  Widget buildLeftFlap() {
+    return Positioned(
+      left: 3,
+      child: Transform.rotate(
+        angle: 3.14 * 0.6,
+        alignment: Alignment.topLeft,
+        child: Container(width: 150, height: 12, color: Colors.blueGrey),
+      ),
+    );
+  }
+
+  Widget buildRightFlap() {
+    // RotateBox is an alternative class to Transform with some differences
+    return Positioned(
+      left: 147,
+      child: Transform.rotate(
+        angle: -3.14 * 0.6,
+        alignment: Alignment.topRight,
+        child: Container(width: 150, height: 12, color: Colors.blueGrey),
+      ),
+    );
+  }
 }
+
+/* 
+To covert radians to degrees for our angel:
+pi / 2 = 90
+pi = 180
+3 * (pi / 2) = 360
+ */
