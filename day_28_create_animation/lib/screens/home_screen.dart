@@ -18,33 +18,51 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     catController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 30),
+      duration: Duration(seconds: 5),
     );
 
     catAnimation = Tween(
-      begin: 0.0,
-      end: 100.0,
+      begin: -30.0,
+      end: -150.0,
     ).animate(CurvedAnimation(parent: catController, curve: Curves.easeIn));
+  }
 
-    catController.forward();
+  void onTap() {
+    if (catController.status == AnimationStatus.completed) {
+      catController.reverse();
+    } else if (catController.status == AnimationStatus.dismissed) {
+      catController.forward();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return buildAnimation();
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [buildCatAnimation(), buildBox()],
+      ),
+    );
   }
 
-  Widget buildAnimation() {
+  Widget buildCatAnimation() {
     return AnimatedBuilder(
       animation: catAnimation,
       builder: (context, child) {
-        // the container is an inexpensive widget to recreate/build 60 times/s (animate) but the CatImage can be expensive to build, that's why we move/animate the container not the cat
-        return Container(
-          margin: EdgeInsets.only(top: catAnimation.value),
-          child: child,
+        // the Positioned widget is an inexpensive widget to recreate/build/animate 60 times/s but the CatImage can be expensive to build/animate, that's why we animate the Positioned not the cat
+        return Positioned(
+          top: catAnimation.value,
+          right: 0,
+          left: 0,
+          child: child!,
         );
       },
       child: CatImage(),
     );
+  }
+
+  Widget buildBox() {
+    return Container(width: 300, height: 250, color: Colors.blueGrey);
   }
 }

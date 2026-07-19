@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter/rendering.dart';
 import 'package:create_animation/screens/home_screen.dart';
 
 void main() {
+  // debugPaintSizeEnabled = true;
   runApp(const MainApp());
 }
 
