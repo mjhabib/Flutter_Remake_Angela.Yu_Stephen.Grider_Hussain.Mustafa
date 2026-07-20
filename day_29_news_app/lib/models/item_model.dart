@@ -24,19 +24,20 @@ class ItemModel {
   // Syntax: ConstructorName(...) : field = value, field2 = value2;
   // Note: No 'this.' keyword needed - we're assigning directly to fields
   ItemModel.fromJson(Map<String, dynamic> parsedJson)
-    : id = parsedJson['id'],
-      deleted = parsedJson['deleted'],
-      type = parsedJson['type'],
-      by = parsedJson['by'],
-      time = parsedJson['time'],
-      text = parsedJson['text'],
-      dead = parsedJson['dead'],
-      parent = parsedJson['parent'],
-      kids = parsedJson['kids'],
-      url = parsedJson['url'],
-      score = parsedJson['score'],
-      title = parsedJson['title'],
-      descendants = parsedJson['descendants'];
+    : id = parsedJson['id'] ?? 0,
+      deleted = parsedJson['deleted'] ?? false,
+      type = parsedJson['type'] ?? '',
+      by = parsedJson['by'] ?? '',
+      time = parsedJson['time'] ?? 0,
+      text = parsedJson['text'] ?? '',
+      dead = parsedJson['dead'] ?? false,
+      parent = parsedJson['parent'] ?? 0,
+      kids = parsedJson['kids'] ?? [],
+      url = parsedJson['url'] ?? '',
+      score = parsedJson['score'] ?? 0,
+      title = parsedJson['title'] ?? '',
+      descendants = parsedJson['descendants'] ?? 0;
+  // handling null values by providing default values
 }
 
 /*
