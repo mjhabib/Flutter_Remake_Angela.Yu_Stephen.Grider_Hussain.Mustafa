@@ -3,10 +3,16 @@ import 'package:path/path.dart'; // join()
 import 'package:sqflite/sqflite.dart'; // Database
 import 'package:path_provider/path_provider.dart'; // getApplicationDocumentsDirectory()
 import 'package:news_app/models/item_model.dart'; // ItemModel.fromDb()
+import 'package:news_app/resources/repository_new.dart';
 
 // unfortunately sqflite package only works on mobile, so I can not test it on web but for future projects I can use alternative packages like hive.
-class NewsDbProvider {
+class NewsDbProvider implements Source, Cache {
   Database? db;
+
+  NewsDbProvider() {
+    // the init method must be called before other methods
+    init();
+  }
 
   // since our initializer/constructor can't be async we are gonna create a method called init to do all pre-initializing things before we move to the implementing other functionalities
   void init() async {
@@ -42,6 +48,7 @@ class NewsDbProvider {
     );
   }
 
+  @override
   Future<ItemModel?> fetchItem(int id) async {
     // tableName: Items
     // columns: to get a specific column
@@ -61,7 +68,17 @@ class NewsDbProvider {
   }
 
   // we don't care about awaiting for this method that's why we didn't turn it to async
+  @override
   Future<int> addItem(ItemModel item) {
     return db!.insert('Items', item.toMapForDb());
   }
+
+  // Todo -> Store and fetch top ids
+  @override
+  Future<List<int>> fetchTopIds() async {
+    return [];
+  }
 }
+
+// Since our DB might throw an error if we attempt to open in multiple times, we just create ONE instance of this class here and use it wherever we want to prevent this issue by creating multiple instances of the same class
+final newsDbProvider = NewsDbProvider();
