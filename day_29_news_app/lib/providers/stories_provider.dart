@@ -1,28 +1,21 @@
+import 'package:news_app/models/item_model.dart';
 import 'package:news_app/resources/repository_new.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'stories_provider.g.dart';
 
+final _repository = RepositoryNew();
+
+// Downloads IDs only once
 @riverpod
-class Stories extends _$Stories {
-  final RepositoryNew _repository = RepositoryNew();
+Future<List<int>> topStoryIds(Ref ref) async {
+  final ids = await _repository.fetchTopIds();
+  return ids.cast<int>();
+}
 
-  @override
-  Stream<List<int>> build() async* {
-    final List<int> topIds = [];
-
-    // Fetch the list of IDs
-    final ids = await _repository.fetchTopIds();
-
-    // Loop through them and yield an updated list after each step
-    for (final id in ids) {
-      topIds.add(id);
-
-      // Yielding a new list copy updates the UI instantly for each item!
-      yield [...topIds];
-      // yield List.unmodifiable(topIds);
-
-      /* Both List.unmodifiable(topIds) and [...topIds] achieve the core rule of state management in Flutter: Never mutate existing state objects; always emit a fresh copy! */
-    }
-  }
+// family:
+// Every ID has its own provider and Riverpod automatically caches them.
+@riverpod
+Future<ItemModel?> story(Ref ref, int id) {
+  return _repository.fetchItem(id);
 }

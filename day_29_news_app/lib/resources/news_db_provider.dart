@@ -68,9 +68,14 @@ class NewsDbProvider implements Source, Cache {
   }
 
   // we don't care about awaiting for this method that's why we didn't turn it to async
+  // conflictAlgorithm: What to do if an item already exists in our DB
   @override
   Future<int> addItem(ItemModel item) {
-    return db!.insert('Items', item.toMapForDb());
+    return db!.insert(
+      'Items',
+      item.toMapForDb(),
+      conflictAlgorithm: ConflictAlgorithm.ignore,
+    );
   }
 
   // Todo -> Store and fetch top ids
