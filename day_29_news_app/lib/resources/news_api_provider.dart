@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' show Client;
 import 'package:news_app/models/item_model.dart';
@@ -13,18 +14,22 @@ class NewsApiProvider implements Source {
   @override
   Future<List<int>> fetchTopIds() async {
     try {
-      final response = await _client.get(
-        Uri.parse('$_newsEndpoint/topstories.json'),
-      );
+      final response = await _client
+          // If this request hasn't completed in 20 seconds, cancel it.
+          .get(Uri.parse('$_newsEndpoint/topstories.json'))
+          .timeout(const Duration(seconds: 20));
 
-      if (response.statusCode >= 200) {
+      // The condition of ">= 200" was wrong because it means even if we get a 300-400 or 500 error, that's OK, move on!
+      if (response.statusCode == 200) {
         final ids = json.decode(response.body);
         return ids.cast<int>();
       } else {
-        throw ('Failed to load item: ${response.statusCode}');
+        throw Exception('Failed to load item: ${response.statusCode}');
       }
+    } on TimeoutException {
+      throw Exception('The request timed out.');
     } catch (e) {
-      throw ('Error: $e');
+      throw Exception('Network error: $e');
     }
   }
 
@@ -32,18 +37,20 @@ class NewsApiProvider implements Source {
   @override
   Future<ItemModel> fetchItem(int id) async {
     try {
-      final response = await _client.get(
-        Uri.parse('$_newsEndpoint/item/$id.json'),
-      );
+      final response = await _client
+          .get(Uri.parse('$_newsEndpoint/item/$id.json'))
+          .timeout(const Duration(seconds: 20));
 
-      if (response.statusCode >= 200) {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
         final parsedJson = json.decode(response.body);
         return ItemModel.fromJson(parsedJson);
       } else {
-        throw ('Failed to load item: ${response.statusCode}');
+        throw Exception('Failed to load item: ${response.statusCode}');
       }
+    } on TimeoutException {
+      throw Exception('The request timed out.');
     } catch (e) {
-      throw ('Error: $e');
+      throw Exception('Network error: $e');
     }
   }
 }

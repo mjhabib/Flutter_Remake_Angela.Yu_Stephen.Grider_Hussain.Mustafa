@@ -78,6 +78,12 @@ class NewsDbProvider implements Source, Cache {
     );
   }
 
+  // Delete the old data so we can replace them with fresh onces
+  @override
+  Future<int> clear() {
+    return db!.delete('Items');
+  }
+
   // Todo -> Store and fetch top ids
   @override
   Future<List<int>> fetchTopIds() async {

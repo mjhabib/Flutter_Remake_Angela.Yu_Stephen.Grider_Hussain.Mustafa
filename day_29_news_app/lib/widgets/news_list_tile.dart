@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_app/providers/stories_provider.dart';
+import 'package:news_app/widgets/loading_container.dart';
 
 class NewsListTile extends ConsumerWidget {
   const NewsListTile({super.key});
@@ -13,37 +14,51 @@ class NewsListTile extends ConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, s) => Center(child: Text('Error: $e')),
       data: (ids) {
-        return ListView.builder(
-          itemCount: ids.length,
-          itemBuilder: (context, index) {
-            final storyAsync = ref.watch(storyProvider(ids[index]));
+        return RefreshIndicator(
+          onRefresh: () async {
+            // Throw away the old data and compute it again.
+            ref.invalidate(topStoryIdsProvider);
 
-            return storyAsync.when(
-              loading: () => const ListTile(title: Text('Loading...')),
-              error: (e, s) => ListTile(title: Text('Error: $e')),
-              data: (story) {
-                if (story == null) {
-                  return const SizedBox.shrink();
-                }
-
-                return Column(
-                  children: [
-                    ListTile(
-                      title: Text(story.title),
-                      subtitle: Text('${story.score} points • By ${story.by}'),
-                      trailing: Column(
-                        children: [
-                          Icon(Icons.comment),
-                          Text('${story.descendants}'),
-                        ],
-                      ),
-                    ),
-                    Divider(),
-                  ],
-                );
-              },
-            );
+            // Event handlers usually use read(), because they don't need rebuilding
+            // And it returns: Future<List<int>> NOT AsyncValue<List<int>>
+            // so we don't have to manually update it or re-assign it to a variable
+            await ref.read(topStoryIdsProvider.future);
           },
+
+          child: ListView.builder(
+            itemCount: ids.length,
+            itemBuilder: (context, index) {
+              final storyAsync = ref.watch(storyProvider(ids[index]));
+
+              return storyAsync.when(
+                loading: () => const LoadingContainer(),
+                error: (e, s) => ListTile(title: Text('Error: $e')),
+                data: (story) {
+                  if (story == null) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text(story.title),
+                        subtitle: Text(
+                          '${story.score} points • By ${story.by}',
+                        ),
+                        trailing: Column(
+                          children: [
+                            Icon(Icons.comment),
+                            Text('${story.descendants}'),
+                          ],
+                        ),
+                      ),
+                      Divider(),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
         );
       },
     );
