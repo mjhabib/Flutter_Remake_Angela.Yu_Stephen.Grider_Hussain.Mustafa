@@ -41,6 +41,9 @@ class NewsListTile extends ConsumerWidget {
                   return Column(
                     children: [
                       ListTile(
+                        onTap: () {
+                          Navigator.pushNamed(context, '${story.id}');
+                        },
                         title: Text(story.title),
                         subtitle: Text(
                           '${story.score} points • By ${story.by}',
