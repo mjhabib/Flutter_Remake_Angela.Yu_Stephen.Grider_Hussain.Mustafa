@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_app/providers/stories_provider.dart';
+
+import 'package:news_app/utility/format_time.dart';
 import 'package:news_app/widgets/loading_container.dart';
+import 'package:news_app/providers/stories_provider.dart';
 
 class NewsListTile extends ConsumerWidget {
   const NewsListTile({super.key});
@@ -46,7 +48,7 @@ class NewsListTile extends ConsumerWidget {
                         },
                         title: Text(story.title),
                         subtitle: Text(
-                          '${story.score} points • By ${story.by}',
+                          '${story.score} points • By ${story.by} • ${formatTime(story.time)}',
                         ),
                         trailing: Column(
                           children: [
