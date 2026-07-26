@@ -1,7 +1,7 @@
 name: prompter_mj
-description: A sample command-line application.
-version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+description: Use this CLI application to create multiple choice or binary-type questions.
+version: 1.0.1
+repository: https://github.com/mjhabib/Flutter_Remake_Angela.Yu_Stephen.Grider_Hussain.Mustafa/tree/main/day_30_dart_prompter
 
 environment:
   sdk: ^3.12.2
