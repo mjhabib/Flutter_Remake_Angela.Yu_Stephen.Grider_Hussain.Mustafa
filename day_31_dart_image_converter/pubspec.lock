@@ -201,6 +201,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.2"
+  prompter_mj:
+    dependency: "direct main"
+    description:
+      name: prompter_mj
+      sha256: e941bf673e5c5f4f14537806f68de499f13c0c703f565a10fc216fda9629ba59
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   pub_semver:
     dependency: transitive
     description:

@@ -1,7 +1,7 @@
 name: image_converter
-description: A sample command-line application.
+description: A simple command-line app to convert images.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/mjhabib/Flutter_Remake_Angela.Yu_Stephen.Grider_Hussain.Mustafa/tree/main/day_31_dart_image_converter
 
 environment:
   sdk: ^3.12.2
@@ -9,6 +9,7 @@ environment:
 # Add regular dependencies here.
 dependencies:
   path: ^1.9.0
+  prompter_mj: ^1.0.1
 
 dev_dependencies:
   lints: ^6.0.0
