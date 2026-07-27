@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:image_converter/image_converter.dart';
 import 'package:prompter_mj/prompter_mj.dart';
 
 void main() {
@@ -22,7 +23,18 @@ void main() {
   );
 
   // ============================================================
-  // The logic
+  // The logic to convert the image and attempt to open it
+  final newPath = imageConverter(
+    selectedFile: selectedImage,
+    format: selectedFormat,
+  );
+
+  final shouldOpen = prompter.askBinary('Do you wanna open the image?');
+  if (shouldOpen) {
+    openFile(newPath);
+  } else {
+    stdout.writeln('Here is your new image: $newPath');
+  }
 }
 
 // ============================================================
@@ -80,3 +92,16 @@ List<Option> buildFileOptions() {
 }
 
 // ============================================================
+// A helper to attempt to open the new image in all platforms
+void openFile(String path) {
+  if (Platform.isWindows) {
+    Process.run('start', [path], runInShell: true);
+  } else if (Platform.isMacOS) {
+    Process.run('open', [path]);
+  } else if (Platform.isLinux) {
+    Process.run('xdg-open', [path]);
+  } else {
+    stdout.writeln('Unsupported OS for opening files automatically');
+    stdout.writeln('Your image is saved at: $path');
+  }
+}
